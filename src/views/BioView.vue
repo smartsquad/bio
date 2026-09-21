@@ -12,7 +12,7 @@ import { FONT_STACK, loadFont } from '@/lib/load-font'
 import { ICONS } from '@/generated/icons'
 import { useI18n } from '@/i18n'
 
-const SITE_ORIGIN = 'https://smartsquad.io'
+const SITE_ORIGIN = 'https://bio.smartsquad.io'
 const LICENSE_URL = 'https://github.com/smartsquad/bio/blob/master/LICENSE.md'
 
 const { t, locale } = useI18n()

@@ -49,7 +49,7 @@ const env = {
   POSTHOG_HOST: vars.POSTHOG_HOST ?? 'https://eu.posthog.com',
   POSTHOG_PROJECT_ID: vars.POSTHOG_PROJECT_ID ?? '',
   POSTHOG_READ_KEY: vars.POSTHOG_READ_KEY ?? '',
-  ALLOWED_ORIGIN: vars.ALLOWED_ORIGIN ?? 'https://smartsquad.io',
+  ALLOWED_ORIGIN: vars.ALLOWED_ORIGIN ?? 'https://bio.smartsquad.io',
   storage: localStorage,
 } satisfies Env
 

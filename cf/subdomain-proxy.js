@@ -9,12 +9,12 @@
  *   samuel.smartsquad.io/*
  *   ceo.smartsquad.io/*
  *
- * It fetches from the GitHub Pages origin and rewrites so the visitor
- * keeps seeing the nice subdomain in the address bar.
+ * It fetches from the custom domain origin (bio.smartsquad.io) and rewrites so the visitor
+ * keeps seeing the nice subdomain (massimo.smartsquad.io etc) in the address bar.
  */
 
-const GH_PAGES_ORIGIN = 'https://smartsquad.github.io';
-const BASE = '/smartsquad-bio';
+const GH_PAGES_ORIGIN = 'https://bio.smartsquad.io';
+const BASE = '';  // custom domain serves at root
 
 export default {
   async fetch(request) {
@@ -31,10 +31,10 @@ export default {
       if (targetPath === '/' || targetPath === '') targetPath = '/samuel';
     } else {
       // Fallback: serve home or let it 404
-      return fetch(`${GH_PAGES_ORIGIN}${BASE}/`, request);
+      return fetch(`${GH_PAGES_ORIGIN}/`, request);
     }
 
-    const targetUrl = new URL(`${GH_PAGES_ORIGIN}${BASE}${targetPath}${url.search}`);
+    const targetUrl = new URL(`${GH_PAGES_ORIGIN}${targetPath}${url.search}`);
     const res = await fetch(targetUrl, {
       ...request,
       redirect: 'manual',
@@ -47,7 +47,7 @@ export default {
       let html = await res.text();
 
       // Optional: force canonical to the nice subdomain
-      // html = html.replace(/https:\/\/smartsquad\.github\.io\/smartsquad-bio/g, `https://${host}`);
+      // html = html.replace(/https:\/\/bio\.smartsquad\.io/g, `https://${host}`);
 
       return new Response(html, {
         status: res.status,

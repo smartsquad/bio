@@ -12,9 +12,9 @@ Vue 3 + Vite 8 + Tailwind v4 + Pug + SCSS + i18next, prerendered with **vite-ssg
 
 - **Content** lives in `content/bios/<slug>.json` (one per person), typed by `src/content/bio.ts`
   (`IBio`). It is loaded at build time (`src/composables/use-bios.ts`).
-- **Routing** — each bio is `smartsquad.io/<slug>` (or `<slug>.smartsquad.io`). `BioView.vue` renders the resolved
-  `IBio`. Subdomains (`massimo.smartsquad.io`, `samuel.smartsquad.io`, `cto.smartsquad.io`, `ceo.smartsquad.io`)
-  are handled via Cloudflare (301 or proxy to the correct path on the GitHub Pages site).
+- **Routing** — each bio is available at `bio.smartsquad.io/<slug>` (GitHub Pages custom domain).
+  Subdomains (`massimo.smartsquad.io`, `samuel.smartsquad.io`, `cto.smartsquad.io`, `ceo.smartsquad.io`)
+  are handled via Cloudflare (redirect or proxy to the correct path on bio.smartsquad.io).
 - **Prerendering** — `vite-ssg` emits one static HTML per bio (`vite.config.ts` `includedRoutes`)
   so each `/<slug>` ships its own `<title>`/OG/`<meta>` (via `@unhead/vue`) for social scrapers.
 - **OG images + favicons** — generated post-build into `dist/og/<slug>.png` and
@@ -25,7 +25,7 @@ Vue 3 + Vite 8 + Tailwind v4 + Pug + SCSS + i18next, prerendered with **vite-ssg
 ## Admin
 
 `/admin` is a custom, client-only SPA (`src/views/AdminView.vue`). It talks only to the
-Cloudflare Worker (`worker/`, served at `https://api.smartsquad.io` or equivalent), which is the trust boundary
+Cloudflare Worker (`worker/`, served at `https://api.bio.smartsquad.io` or equivalent), which is the trust boundary
 holding every secret. The Worker **must** share a registrable domain with the site (not its `*.workers.dev`
 URL): the SPA and API then share a registrable domain, so the httpOnly session cookie is first-party
 and Safari sends it — a cross-site `*.workers.dev` API gets its cookie blocked and every call 401s.
@@ -100,24 +100,24 @@ the admin API custom domain.
 
 ### DNS & Cloudflare setup (for massimo.smartsquad.io / samuel.smartsquad.io + aliases)
 
-GitHub Pages hosts the static site at:
-`https://smartsquad.github.io/smartsquad-bio/`
+GitHub Pages hosts the static site with custom domain:
+`https://bio.smartsquad.io/`
 
-(After enabling GitHub Pages → "GitHub Actions" source in repo Settings.)
+(Configure the custom domain `bio.smartsquad.io` in the repo's Pages settings after enabling GitHub Actions source.)
 
 Cloudflare is used to provide the clean branded subdomains:
 
 **DNS records (in Cloudflare for smartsquad.io zone):**
-- `massimo`, `samuel`, `cto`, `ceo` → CNAME (or appropriate) pointing at the GH Pages host, or
-- Use **Redirect Rules** (Dynamic or static) or a small CF Worker/Page to map:
-  - `https://massimo.smartsquad.io/*` → `https://smartsquad.github.io/smartsquad-bio/massimo` (preserve path suffix or hard-map)
-  - `https://cto.smartsquad.io/*` → same as massimo
-  - `https://samuel.smartsquad.io/*` and `ceo...` likewise
+- `massimo`, `samuel`, `cto`, `ceo` → CNAME pointing at `bio.smartsquad.io`, or
+- Use **Redirect Rules** or a small CF Worker to map:
+  - `https://massimo.smartsquad.io/*` → `https://bio.smartsquad.io/massimo`
+  - `https://cto.smartsquad.io/*` → `https://bio.smartsquad.io/massimo`
+  - Same for samuel / ceo.
 
 **Admin API:**
-- `api.smartsquad.io` → Custom Domain on the deployed Worker (`smartsquad-bio-admin`).
+- `api.bio.smartsquad.io` → Custom Domain on the deployed Worker (`smartsquad-bio-admin`).
 
-This way visitors see nice URLs like `massimo.smartsquad.io` while the content + assets come from the GitHub Pages build (which uses base `/smartsquad-bio/`).
+This way visitors see nice URLs like `massimo.smartsquad.io` while the content comes from `bio.smartsquad.io`.
 
 After first successful Pages deploy you will also see the Pages URL in the Actions environment.
 
@@ -164,4 +164,4 @@ satori + resvg (OG) · PostHog + GTM · Cloudflare Workers · TypeScript · Bun.
 
 Deployed to GitHub Pages under the Smart Squad GitHub organization. Subdomains managed with Cloudflare.
 
-**Next steps:** See [DEPLOY.md](./DEPLOY.md) — enable GitHub Pages (one-time) + wire the Cloudflare subdomains (massimo.smartsquad.io, samuel.smartsquad.io, cto.smartsquad.io, ceo.smartsquad.io). PostHog is already configured.
+**Next steps:** See [DEPLOY.md](./DEPLOY.md) — set custom domain `bio.smartsquad.io` on GitHub Pages + wire the Cloudflare subdomains (massimo.smartsquad.io etc). PostHog is already configured.

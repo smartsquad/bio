@@ -25,4 +25,4 @@ User-agent: CCBot
 Allow: /
 Disallow: /admin
 
-Sitemap: https://smartsquad.io/sitemap.xml
+Sitemap: https://bio.smartsquad.io/sitemap.xml

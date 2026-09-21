@@ -8,11 +8,13 @@ The build succeeds and the artifact is produced, but deployment to Pages fails u
 2. Under "Build and deployment" → **Source** select **GitHub Actions**
 3. Save.
 
-After enabling, re-run the "Deploy site" workflow (or push to master). The site will be published at:
+After enabling, re-run the "Deploy site" workflow (or push to master).
 
-https://smartsquad.github.io/smartsquad-bio/
+Then go to Settings → Pages and set **Custom domain** to `bio.smartsquad.io`.
 
-You will see the Pages URL in the Actions environment after the first successful run.
+The site will be published at:
+
+https://bio.smartsquad.io/
 
 ## 2. PostHog (done)
 
@@ -30,7 +32,7 @@ Target public experience:
 - `https://massimo.smartsquad.io`  (and `cto.smartsquad.io`)
 - `https://samuel.smartsquad.io`   (and `ceo.smartsquad.io`)
 
-Current hosting: GitHub Pages at `https://smartsquad.github.io/smartsquad-bio/`
+The GitHub Pages project uses custom domain `bio.smartsquad.io`.
 
 ### Recommended simple setup (Redirects) - quick start
 
@@ -39,38 +41,32 @@ In Cloudflare → Rules → Redirect Rules, create two rules:
 **Rule 1 - Massimo side**
 - Name: massimo + cto
 - When: `(http.host eq "massimo.smartsquad.io" or http.host eq "cto.smartsquad.io")`
-- Then: Dynamic redirect → `https://smartsquad.github.io/smartsquad-bio/massimo${1}` (or just hardcode `/massimo`)
+- Then: Dynamic redirect → `https://bio.smartsquad.io/massimo`
 
 **Rule 2 - Samuel side**
 - When: `(http.host eq "samuel.smartsquad.io" or http.host eq "ceo.smartsquad.io")`
-- Then: redirect to `/samuel`
+- Then: redirect to `https://bio.smartsquad.io/samuel`
 
-For even cleaner experience (address bar stays on nice subdomain), use the Worker in `cf/subdomain-proxy.js`.
-
-For the root of the subdomain you can also redirect `https://massimo.smartsquad.io/` → `/massimo`
+For even cleaner experience (address bar stays on nice subdomain without seeing bio.smartsquad.io), use the Worker in `cf/subdomain-proxy.js`.
 
 ### For clean URLs in the address bar (experimental)
 
 > Not deployed. Known issue: on the subdomain root the Vue router sees `/` and renders the home page after hydration. Use the Redirect Rules.
 
-Use a small Cloudflare Worker so the address bar stays on the nice subdomain.
+Use a small Cloudflare Worker so the address bar stays on the nice subdomain (e.g. massimo.smartsquad.io) instead of showing bio.smartsquad.io.
 
-Example worker in `cf/subdomain-proxy.js`.
+Example worker in `cf/subdomain-proxy.js` (already updated for bio.smartsquad.io origin).
 
 Deploy steps:
 1. Workers & Pages → Create Worker → paste the code.
-2. Add routes:
-   - `massimo.smartsquad.io/*`
-   - `cto.smartsquad.io/*`
-   - `samuel.smartsquad.io/*`
-   - `ceo.smartsquad.io/*`
-3. (Optional) add a KV or just hardcode the origin as in the file.
+2. Add routes for the four subdomains.
+3. The Worker proxies from bio.smartsquad.io .
 
-This way people see `massimo.smartsquad.io` while the content comes from GitHub Pages.
+This way people see `massimo.smartsquad.io` while content is served from the custom domain.
 
 ### Admin API
 
-- Point `api.smartsquad.io` as **Custom Domain** on the Cloudflare Worker (`smartsquad-bio-admin`).
+- Point `api.bio.smartsquad.io` as **Custom Domain** on the Cloudflare Worker (`smartsquad-bio-admin`).
 - This is required for the cookie to be first-party when using `/admin`.
 
 ## 4. Re-deploy

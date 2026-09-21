@@ -61,7 +61,7 @@ const profileDescription = (bio: IBio) => {
 const homeTitle = 'Smart Squad — Links'
 const homeDescription =
   'Official links for the Smart Squad founders. Profile pages, websites, contact links and published public social destinations for Massimo and Samuel.'
-const homeOgImage = 'https://smartsquad.io/og/home.jpg'
+const homeOgImage = 'https://bio.smartsquad.io/og/home.jpg'
 
 useSeoMeta({
   title: homeTitle,
@@ -71,7 +71,7 @@ useSeoMeta({
   ogDescription: homeDescription,
   ogType: 'website',
   ogSiteName: 'Smart Squad',
-  ogUrl: 'https://smartsquad.io/',
+  ogUrl: 'https://bio.smartsquad.io/',
   ogImage: homeOgImage,
   ogImageWidth: '1200',
   ogImageHeight: '630',
@@ -90,38 +90,38 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'WebSite',
-      '@id': 'https://smartsquad.io/#website',
-      url: 'https://smartsquad.io/',
+      '@id': 'https://bio.smartsquad.io/#website',
+      url: 'https://bio.smartsquad.io/',
       name: 'Smart Squad links',
       description: homeDescription,
       inLanguage: ['en', 'it'],
     },
     {
       '@type': 'CollectionPage',
-      '@id': 'https://smartsquad.io/#webpage',
+      '@id': 'https://bio.smartsquad.io/#webpage',
       name: homeTitle,
       description: homeDescription,
-      url: 'https://smartsquad.io/',
+      url: 'https://bio.smartsquad.io/',
       dateModified: __BUILD_DATE__,
-      isPartOf: { '@id': 'https://smartsquad.io/#website' },
-      about: sortedBios.map((b) => ({ '@id': `https://smartsquad.io/#${b.slug}` })),
+      isPartOf: { '@id': 'https://bio.smartsquad.io/#website' },
+      about: sortedBios.map((b) => ({ '@id': `https://bio.smartsquad.io/#${b.slug}` })),
       mainEntity: {
         '@type': 'ItemList',
         numberOfItems: profileCount,
         itemListElement: sortedBios.map((b, i) => ({
           '@type': 'ListItem',
           position: i + 1,
-          url: `https://smartsquad.io/${b.slug}`,
+          url: `https://bio.smartsquad.io/${b.slug}`,
           name: b.name,
-          item: { '@id': `https://smartsquad.io/#${b.slug}` },
+          item: { '@id': `https://bio.smartsquad.io/#${b.slug}` },
         })),
       },
     },
     ...sortedBios.map((b) => ({
       '@type': 'Person',
-      '@id': `https://smartsquad.io/#${b.slug}`,
+      '@id': `https://bio.smartsquad.io/#${b.slug}`,
       name: b.name,
-      url: `https://smartsquad.io/${b.slug}`,
+      url: `https://bio.smartsquad.io/${b.slug}`,
       ...(b.content.en.eyebrow ? { jobTitle: b.content.en.eyebrow } : {}),
       ...(b.content.en.tagline ? { description: b.content.en.tagline } : {}),
       sameAs: [b.site, ...b.socials.map((s) => s.href)].filter(Boolean),
@@ -130,7 +130,7 @@ const jsonLd = {
 }
 useHead({
   htmlAttrs: { lang: 'en' },
-  link: [{ rel: 'canonical', href: 'https://smartsquad.io/' }],
+  link: [{ rel: 'canonical', href: 'https://bio.smartsquad.io/' }],
   script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(jsonLd) }],
 })
 
@@ -289,7 +289,7 @@ main.relative.w-full.bg-site-background.text-site-text
         | The public profile owner is the source of each editable record. Because destinations can
         | change, the canonical profile page should be treated as the current directory entry.
         | External services control their own pages, availability and privacy practices. A link
-        | from smartsquad.io indicates that the destination is published in the relevant profile
+        | from bio.smartsquad.io indicates that the destination is published in the relevant profile
         | record; it does not imply ownership of the external platform or verification by that
         | platform.
 
@@ -314,7 +314,7 @@ main.relative.w-full.bg-site-background.text-site-text
           dt
             h3.text-lg.font-semibold.text-site-heading Which URL should be shared?
           dd.mt-2.ml-0.text-site-muted
-            | Share the canonical path shown on the profile, such as smartsquad.io/massimo (or massimo.smartsquad.io). Canonical
+            | Share the canonical path shown on the profile, such as bio.smartsquad.io/massimo (or massimo.smartsquad.io). Canonical
             | metadata and the sitemap use the same path-based addresses for consistent discovery.
 
   noscript
