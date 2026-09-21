@@ -402,7 +402,7 @@ main.social-page.relative.flex.min-h-dvh.flex-col.items-center.overflow-x-clip.b
       :aria-label="t('footer.licenseAriaLabel')"
       class="hover:text-site-heading"
       @click="onClick({ id: 'license', href: LICENSE_URL })"
-    ) © {{ year }} {{ bio.name }}
+    ) © {{ year }} Smart Squad
 
   transition(name="share")
     .fixed.inset-0.z-50.flex.items-center.justify-center.p-4(v-if="shareOpen")
