@@ -17,7 +17,7 @@ function bioRoutes(): string[] {
 }
 
 const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
-  base: '/',
+  base: '/smartsquad-bio/',
   build: { target: 'es2022' },
   define: {
     __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
