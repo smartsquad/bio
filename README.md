@@ -163,3 +163,5 @@ Vue 3 (beta) · Vite 8 · vite-ssg · Tailwind CSS v4 · Pug + SCSS · i18next �
 satori + resvg (OG) · PostHog + GTM · Cloudflare Workers · TypeScript · Bun.
 
 Deployed to GitHub Pages under the Smart Squad GitHub organization. Subdomains managed with Cloudflare.
+
+**Next steps:** See [DEPLOY.md](./DEPLOY.md) — enable GitHub Pages (one-time) + wire the Cloudflare subdomains (massimo.smartsquad.io, samuel.smartsquad.io, cto.smartsquad.io, ceo.smartsquad.io). PostHog is already configured.
