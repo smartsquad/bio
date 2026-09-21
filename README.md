@@ -100,29 +100,28 @@ the admin API custom domain.
 
 ### DNS & Cloudflare setup (for massimo.smartsquad.io / samuel.smartsquad.io + aliases)
 
-GitHub Pages hosts the static site (typically at `https://smartsquad.github.io/smartsquad-bio/` or a
-custom domain attached to the Pages project).
+GitHub Pages hosts the static site at:
+`https://smartsquad.github.io/smartsquad-bio/`
 
-Cloudflare handles the nice subdomains:
+(After enabling GitHub Pages → "GitHub Actions" source in repo Settings.)
 
-- Create DNS records (orange/proxied where needed):
-  - `massimo.smartsquad.io`, `samuel.smartsquad.io`, `cto.smartsquad.io`, `ceo.smartsquad.io`
-  - `api.smartsquad.io` (for the admin Worker)
+Cloudflare is used to provide the clean branded subdomains:
 
-Recommended approach (simple & reliable):
-- Point the subdomains via **CNAME** (or A/AAAA for apex-style) to the GitHub Pages target, or use
-  Cloudflare **Redirect Rules** / **Page Rules** / **Workers** to map:
-  - `https://massimo.smartsquad.io/*` → `https://<gh-pages-host>/massimo` (301 or proxy)
-  - `https://cto.smartsquad.io/*` → `https://<gh-pages-host>/massimo`
-  - Same for samuel / ceo.
+**DNS records (in Cloudflare for smartsquad.io zone):**
+- `massimo`, `samuel`, `cto`, `ceo` → CNAME (or appropriate) pointing at the GH Pages host, or
+- Use **Redirect Rules** (Dynamic or static) or a small CF Worker/Page to map:
+  - `https://massimo.smartsquad.io/*` → `https://smartsquad.github.io/smartsquad-bio/massimo` (preserve path suffix or hard-map)
+  - `https://cto.smartsquad.io/*` → same as massimo
+  - `https://samuel.smartsquad.io/*` and `ceo...` likewise
 
-- For the admin API: add `api.smartsquad.io` as a **Custom Domain** on the Cloudflare Worker.
-  This keeps the Worker on the same registrable domain as the site for first-party cookies.
+**Admin API:**
+- `api.smartsquad.io` → Custom Domain on the deployed Worker (`smartsquad-bio-admin`).
 
-- Update GitHub repo **Pages settings** → Custom domain if you attach a base domain (optional).
-- Generate the OG images etc at build time; they are served from the same static origin.
+This way visitors see nice URLs like `massimo.smartsquad.io` while the content + assets come from the GitHub Pages build (which uses base `/smartsquad-bio/`).
 
-See the original de-luisa-bio repository for additional HSTS / SSL notes if you proxy the site through Cloudflare.
+After first successful Pages deploy you will also see the Pages URL in the Actions environment.
+
+See the original de-luisa-bio repository for HSTS / SSL edge cert details if proxying everything through Cloudflare (orange cloud).
 
 ## Adding / updating a founder
 
