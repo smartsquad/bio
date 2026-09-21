@@ -1,65 +1,95 @@
 /**
  * Cloudflare Worker: Clean subdomain proxy for smartsquad-bio
  *
- * Deploy this as a Worker (or use it as inspiration for Page Rules / Transform Rules).
+ * This makes:
+ *   massimo.smartsquad.io  →  bio.smartsquad.io/massimo   (content served cleanly)
+ *   cto.smartsquad.io      →  bio.smartsquad.io/massimo
+ *   samuel.smartsquad.io   →  bio.smartsquad.io/samuel
+ *   ceo.smartsquad.io      →  bio.smartsquad.io/samuel
  *
- * Routes to configure on the Worker:
- *   massimo.smartsquad.io/*
- *   cto.smartsquad.io/*
- *   samuel.smartsquad.io/*
- *   ceo.smartsquad.io/*
+ * The visitor stays on the nice subdomain in the address bar.
  *
- * It fetches from the custom domain origin (bio.smartsquad.io) and rewrites so the visitor
- * keeps seeing the nice subdomain (massimo.smartsquad.io etc) in the address bar.
+ * Setup:
+ * 1. Create a Worker in Cloudflare (e.g. name: smartsquad-bio-subdomains)
+ * 2. Paste this code.
+ * 3. Add Custom Domains (recommended) or Routes:
+ *      massimo.smartsquad.io/*
+ *      cto.smartsquad.io/*
+ *      samuel.smartsquad.io/*
+ *      ceo.smartsquad.io/*
+ * 4. (Optional but recommended) Set the Worker to "orange cloud" proxied.
  */
 
-const GH_PAGES_ORIGIN = 'https://bio.smartsquad.io';
-const BASE = '';  // custom domain serves at root
+const ORIGIN = 'https://bio.smartsquad.io';
+
+// Paths that are shared assets (not person-specific)
+const ASSET_PREFIXES = ['/assets', '/fonts', '/og', '/favicons', '/media'];
+const ASSET_EXTENSIONS = ['.js', '.css', '.png', '.jpg', '.jpeg', '.webp', '.svg', '.ico', '.woff', '.woff2', '.map'];
+
+function isAssetPath(pathname) {
+  if (ASSET_PREFIXES.some(p => pathname.startsWith(p))) return true;
+  if (ASSET_EXTENSIONS.some(ext => pathname.endsWith(ext))) return true;
+  if (pathname === '/robots.txt' || pathname === '/sitemap.xml' || pathname === '/llms.txt' || pathname === '/llms-full.txt') return true;
+  return false;
+}
+
+function getSlugForHost(host) {
+  if (host === 'massimo.smartsquad.io' || host === 'cto.smartsquad.io') return 'massimo';
+  if (host === 'samuel.smartsquad.io' || host === 'ceo.smartsquad.io') return 'samuel';
+  return null;
+}
 
 export default {
   async fetch(request) {
     const url = new URL(request.url);
     const host = url.hostname;
+    const originalPath = url.pathname;
 
-    let targetPath = url.pathname;
+    const slug = getSlugForHost(host);
 
-    // Map subdomains to the correct bio path
-    if (host === 'massimo.smartsquad.io' || host === 'cto.smartsquad.io') {
-      if (targetPath === '/' || targetPath === '') targetPath = '/massimo';
-      // otherwise keep the path the user typed (rare)
-    } else if (host === 'samuel.smartsquad.io' || host === 'ceo.smartsquad.io') {
-      if (targetPath === '/' || targetPath === '') targetPath = '/samuel';
-    } else {
-      // Fallback: serve home or let it 404
-      return fetch(`${GH_PAGES_ORIGIN}/`, request);
+    if (!slug) {
+      // Not one of our subdomains — pass through or 404
+      return fetch(`${ORIGIN}${originalPath}${url.search}`, request);
     }
 
-    const targetUrl = new URL(`${GH_PAGES_ORIGIN}${targetPath}${url.search}`);
+    let targetPath;
+
+    if (isAssetPath(originalPath)) {
+      // Shared assets always come from the root of the main domain
+      targetPath = originalPath;
+    } else {
+      // Everything else on the person subdomain serves that person's bio page
+      targetPath = `/${slug}`;
+    }
+
+    const targetUrl = new URL(`${ORIGIN}${targetPath}${url.search}`);
     const res = await fetch(targetUrl, {
-      ...request,
+      method: request.method,
+      headers: request.headers,
       redirect: 'manual',
     });
 
-    // Rewrite the response so links and assets work under the subdomain
-    // (simple HTML rewrite for canonicals / base if needed; for full SPA it's usually fine)
     const contentType = res.headers.get('content-type') || '';
+
     if (contentType.includes('text/html')) {
       let html = await res.text();
 
-      // Optional: force canonical to the nice subdomain
-      // html = html.replace(/https:\/\/bio\.smartsquad\.io/g, `https://${host}`);
+      // Optional: make the canonical point to the clean subdomain
+      // html = html.replace(
+      //   /<link[^>]+rel=["']canonical["'][^>]*>/i,
+      //   `<link rel="canonical" href="https://${host}/">`
+      // );
 
       return new Response(html, {
         status: res.status,
         headers: {
           ...Object.fromEntries(res.headers),
           'content-type': 'text/html; charset=utf-8',
-          'x-robots-tag': 'noindex', // optional during initial testing
         },
       });
     }
 
-    // Pass through assets, etc.
+    // Non-HTML (assets, etc.) — pass through as-is
     return res;
   },
 };

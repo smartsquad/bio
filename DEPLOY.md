@@ -36,35 +36,57 @@ Target public experience:
 
 The GitHub Pages project uses custom domain `bio.smartsquad.io`.
 
-### Recommended simple setup (Redirects) - quick start
+### Recommended: Clean subdomain mapping (massimo.smartsquad.io → bio.smartsquad.io/massimo)
 
-In Cloudflare → Rules → Redirect Rules, create two rules:
+**Goal**: `massimo.smartsquad.io` (and `cto.smartsquad.io`) must clearly serve the same content as `bio.smartsquad.io/massimo`, and `samuel.smartsquad.io` / `ceo.smartsquad.io` for Samuel.
 
-**Rule 1 - Massimo side**
-- Name: massimo + cto
-- When: `(http.host eq "massimo.smartsquad.io" or http.host eq "cto.smartsquad.io")`
-- Then: Dynamic redirect → `https://bio.smartsquad.io/massimo`
-
-**Rule 2 - Samuel side**
-- When: `(http.host eq "samuel.smartsquad.io" or http.host eq "ceo.smartsquad.io")`
-- Then: redirect to `https://bio.smartsquad.io/samuel`
-
-For even cleaner experience (address bar stays on nice subdomain without seeing bio.smartsquad.io), use the Worker in `cf/subdomain-proxy.js`.
-
-### For clean URLs in the address bar (experimental)
+#### Experimental: Cloudflare Worker proxy (not deployed)
 
 > Not deployed. Known issue: on the subdomain root the Vue router sees `/` and renders the home page after hydration. Use the Redirect Rules.
 
-Use a small Cloudflare Worker so the address bar stays on the nice subdomain (e.g. massimo.smartsquad.io) instead of showing bio.smartsquad.io.
+Use the ready-made worker:
 
-Example worker in `cf/subdomain-proxy.js` (already updated for bio.smartsquad.io origin).
+1. Go to Cloudflare → Workers & Pages → Create Worker
+2. Name it e.g. `smartsquad-bio-subdomains`
+3. Delete the default code and paste the entire content of `cf/subdomain-proxy.js`
+4. Save and Deploy
+5. Go to the Worker → **Triggers** → **Custom Domains** (or Routes) and add:
+   - `massimo.smartsquad.io/*`
+   - `cto.smartsquad.io/*`
+   - `samuel.smartsquad.io/*`
+   - `ceo.smartsquad.io/*`
 
-Deploy steps:
-1. Workers & Pages → Create Worker → paste the code.
-2. Add routes for the four subdomains.
-3. The Worker proxies from bio.smartsquad.io .
+This Worker does exactly:
+- `massimo.smartsquad.io` → serves `bio.smartsquad.io/massimo`
+- `cto.smartsquad.io` → same
+- Same logic for Samuel side
+- Assets are correctly loaded from the main domain
+- Address bar stays on the subdomain
 
-This way people see `massimo.smartsquad.io` while content is served from the custom domain.
+#### Recommended (live): Redirect Rules
+
+Use Cloudflare Redirect Rules (the visitor will see `bio.smartsquad.io` in the URL after the click):
+
+**Rule Massimo + CTO**
+- When: `http.host in {"massimo.smartsquad.io" "cto.smartsquad.io"}`
+- Then: Redirect to `https://bio.smartsquad.io/massimo` (Status 301 or 302)
+
+**Rule Samuel + CEO**
+- When: `http.host in {"samuel.smartsquad.io" "ceo.smartsquad.io"}`
+- Then: Redirect to `https://bio.smartsquad.io/samuel`
+
+### Clean subdomain experience (experimental)
+
+> Not deployed. Known issue: on the subdomain root the Vue router sees `/` and renders the home page after hydration. Use the Redirect Rules.
+
+The Worker in `cf/subdomain-proxy.js` is already written to achieve exactly what you asked:
+
+**massimo.smartsquad.io** (and cto) serves the same page as **bio.smartsquad.io/massimo**  
+**samuel.smartsquad.io** (and ceo) serves the same page as **bio.smartsquad.io/samuel**
+
+Follow the steps in the section above ("Recommended: Clean subdomain mapping").
+
+After adding the Custom Domains to the Worker, visiting `massimo.smartsquad.io` will load the correct content while keeping the clean subdomain in the browser.
 
 ### Admin API
 

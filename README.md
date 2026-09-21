@@ -108,11 +108,12 @@ GitHub Pages hosts the static site with custom domain:
 Cloudflare is used to provide the clean branded subdomains:
 
 **DNS records (in Cloudflare for smartsquad.io zone):**
-- `massimo`, `samuel`, `cto`, `ceo` → CNAME pointing at `bio.smartsquad.io`, or
-- Use **Redirect Rules** or a small CF Worker to map:
-  - `https://massimo.smartsquad.io/*` → `https://bio.smartsquad.io/massimo`
-  - `https://cto.smartsquad.io/*` → `https://bio.smartsquad.io/massimo`
-  - Same for samuel / ceo.
+- `massimo`, `samuel`, `cto`, `ceo` → either:
+  - CNAME to `bio.smartsquad.io` + Redirect Rules (live setup), **or, experimentally,**
+  - Point them to a Cloudflare Worker (see `cf/subdomain-proxy.js`) so that:
+    - `massimo.smartsquad.io` (and `cto.smartsquad.io`) serves exactly the content of `bio.smartsquad.io/massimo`
+    - `samuel.smartsquad.io` (and `ceo.smartsquad.io`) serves exactly the content of `bio.smartsquad.io/samuel`
+    - The visitor keeps the clean subdomain in the address bar.
 
 **Admin API:**
 - `api.bio.smartsquad.io` → Custom Domain on the deployed Worker (`smartsquad-bio-admin`).
