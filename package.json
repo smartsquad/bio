@@ -10,7 +10,7 @@
     "worker:dev": "bun worker/dev-server.ts",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
-    "build-only": "bun scripts/generate-icons.ts && vite-ssg build && bun scripts/generate-og.ts && bun scripts/generate-favicons.ts && bun scripts/generate-seo.ts",
+    "build-only": "bun scripts/generate-icons.ts && vite-ssg build && bun scripts/generate-og.ts && bun scripts/generate-seo.ts",
     "type-check": "vue-tsc --build",
     "lint": "run-s lint:*",
     "lint:oxlint": "oxlint . --fix",

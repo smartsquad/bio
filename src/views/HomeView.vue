@@ -7,7 +7,7 @@ import type { IBio } from '@/content/bio'
 import { bios } from '@/composables/use-bios'
 import { track } from '@/composables/use-analytics'
 import { avatarSources } from '@/lib/avatar'
-import { FAVICON_RADIUS, letterGlyphDataUri } from '@/lib/letter-glyph'
+import { letterGlyphDataUri } from '@/lib/letter-glyph'
 
 function shuffle(input: IBio[]): IBio[] {
   const a = input.slice()
@@ -134,7 +134,7 @@ useHead({
   script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(jsonLd) }],
 })
 
-useFavicon(letterGlyphDataUri('S', '#10b981', FAVICON_RADIUS))
+useFavicon('/favicon.ico')
 </script>
 
 <template lang="pug">

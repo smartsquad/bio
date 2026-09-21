@@ -68,8 +68,9 @@ Segui questi passi **esatti**:
 5. Clicca **Create Worker**.
 6. Ora sei nell'editor del codice.
    - Cancella tutto il codice di default che c'è dentro.
-   - Apri il file nel repo: `cf/subdomain-proxy.js`
-   - Copia **tutto** il contenuto di quel file.
+   - Apri questo link in un altro tab (per copiare facilmente):  
+     https://raw.githubusercontent.com/smartsquad/bio/master/cf/subdomain-proxy.js
+   - Copia **tutto** il codice.
    - Incolla nel grande box dell'editor.
 7. In alto a destra clicca **Deploy** (o Save and Deploy).
 8. Aspetta che dica "Worker deployed successfully".

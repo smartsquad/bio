@@ -7,7 +7,7 @@ import type { IBioLink } from '@/content/bio'
 import { useCurrentBio } from '@/composables/use-current-bio'
 import { track } from '@/composables/use-analytics'
 import { avatarSources } from '@/lib/avatar'
-import { FAVICON_RADIUS, letterGlyphDataUri } from '@/lib/letter-glyph'
+import { letterGlyphDataUri } from '@/lib/letter-glyph'
 import { FONT_STACK, loadFont } from '@/lib/load-font'
 import { ICONS } from '@/generated/icons'
 import { useI18n } from '@/i18n'
@@ -142,21 +142,10 @@ useHead({
   htmlAttrs: { lang: () => locale.value },
   link: [
     { rel: 'canonical', href: () => canonical.value },
-    { rel: 'icon', href: () => `/favicons/${bio.value?.slug ?? 'massimo'}.svg` },
+    { rel: 'icon', href: '/favicon.ico' },
   ],
   script: [{ type: 'application/ld+json', innerHTML: () => JSON.stringify(jsonLd.value) }],
 })
-useFavicon(
-  computed(() =>
-    bio.value
-      ? letterGlyphDataUri(
-          bio.value.name[0],
-          bio.value.theme.glyphColor ?? bio.value.theme.primary,
-          FAVICON_RADIUS,
-        )
-      : null,
-  ),
-)
 
 watchEffect(() => {
   if (bio.value) {

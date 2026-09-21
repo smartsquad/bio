@@ -42,8 +42,12 @@ async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
       ...init,
     })
   } catch {
+    const isProd = typeof window !== 'undefined' && !/^(localhost|127\.0\.0\.1)$/.test(window.location.hostname)
+    const hint = isProd
+      ? 'Please ensure the Cloudflare Worker "smartsquad-bio-admin" is deployed and has custom domain api.bio.smartsquad.io configured.'
+      : 'Is the worker running? → bun worker/dev-server.ts'
     throw new Error(
-      `Cannot reach the admin API at ${API || '(unset)'}. Is the worker running? → bun worker/dev-server.ts`,
+      `Cannot reach the admin API at ${API || '(unset)'}. ${hint}`,
     )
   }
   const contentType = res.headers.get('content-type') ?? ''
