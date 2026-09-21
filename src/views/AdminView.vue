@@ -10,7 +10,7 @@ import { generateAvatarSet } from '@/admin/image-to-webp'
 
 const { session, refresh, login, logout, fetchStats, loadBio, saveBio, uploadMedia } = useAdminAuth()
 
-const tab = ref<'stats' | 'editor'>('stats')
+const tab = ref<'stats' | 'editor'>('editor')
 const form = ref<IBio | null>(null)
 const stats = ref<IBioStats | null>(null)
 const range = ref(30)
@@ -23,6 +23,7 @@ const loginError = ref('')
 const busy = ref(false)
 const message = ref('')
 const error = ref('')
+const statsError = ref('')
 
 const FONTS = Object.keys(FONT_STACK) as TFont[]
 const LOCALES: TLocale[] = ['en', 'it']
@@ -66,12 +67,20 @@ async function initForm() {
 }
 
 async function loadStats() {
-  error.value = ''
+  statsError.value = ''
   try {
     stats.value = await fetchStats(range.value)
   } catch (e) {
-    stats.value = null
-    error.value = String(e)
+    stats.value = {
+      range: range.value,
+      visits: 0,
+      uniques: 0,
+      links: [],
+      series: [],
+      sources: [],
+      countries: [],
+    }
+    statsError.value = String(e)
   }
 }
 
@@ -215,7 +224,7 @@ main.min-h-dvh.bg-site-background.text-site-text(v-else)
         option(:value="7") Last 7 days
         option(:value="30") Last 30 days
         option(:value="90") Last 90 days
-    p.text-sm.text-red-500(v-if="error") {{ error }}
+    p.text-sm.text-red-500(v-if="statsError") {{ statsError }}
     .grid.grid-cols-2.gap-3
       .rounded-2xl.border.border-site-border.bg-site-surface.p-4
         .text-xs.uppercase.tracking-wide.text-site-muted Visits
@@ -353,7 +362,7 @@ main.min-h-dvh.bg-site-background.text-site-text(v-else)
         span.text-sm.text-green-600(v-if="message") {{ message }}
         span.text-sm.text-red-500(v-if="error") {{ error }}
 
-    aside.flex.flex-col.gap-2(class="xl:sticky xl:top-20 xl:self-start")
+    aside.order-last.flex.flex-col.gap-2(class="xl:order-none xl:sticky xl:top-20 xl:self-start")
       .flex.items-center.justify-between.gap-2
         .text-xs.uppercase.tracking-wide.text-site-muted Live preview
         .flex.items-center.gap-2
@@ -374,8 +383,8 @@ main.min-h-dvh.bg-site-background.text-site-text(v-else)
         target="_blank"
         rel="noopener noreferrer"
       ) Open public page ↗
-      .overflow-auto.rounded-2xl.border.border-site-border.bg-site-background(
-        class="max-h-[calc(100dvh-8rem)]"
+      .rounded-2xl.border.border-site-border.bg-site-background(
+        class="xl:max-h-[calc(100dvh-8rem)] xl:overflow-auto"
       )
         BioProfile(
           :bio="form"
