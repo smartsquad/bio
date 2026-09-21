@@ -1,7 +1,7 @@
 {
   "slug": "samuel",
   "name": "Samuel Burlon",
-  "avatar": "",
+  "avatar": "/media/samuel",
   "site": "https://smartsquad.io",
   "siteCard": {
     "url": "https://smartsquad.io",
@@ -14,8 +14,8 @@
     "font": "geist-sans",
     "cardRadius": 16,
     "avatarRadius": 9999,
-    "avatarBorderWidth": 2,
-    "avatarBorderColor": "#047857"
+    "avatarBorderWidth": 5,
+    "avatarBorderColor": "#ffffff"
   },
   "content": {
     "en": {
@@ -41,20 +41,6 @@
   },
   "links": [
     {
-      "id": "book",
-      "label": {
-        "en": "Book a 30-min intro",
-        "it": "Prenota un'intro di 30 min",
-        "ja": "30分の紹介通話を予約",
-        "ru": "Записаться на 30-минутное знакомство",
-        "uk": "Записатися на 30-хвилинне знайомство"
-      },
-      "href": "https://cal.com/samuelburlon/intro",
-      "icon": "mdi:calendar-check-outline",
-      "primary": true,
-      "external": true
-    },
-    {
       "id": "email",
       "label": {
         "en": "Email me",
@@ -64,7 +50,8 @@
         "uk": "Написати мені"
       },
       "href": "mailto:samuel@smartsquad.io",
-      "icon": "mdi:email-outline"
+      "icon": "mdi:email-outline",
+      "primary": true
     },
     {
       "id": "website",
