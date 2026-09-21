@@ -45,11 +45,24 @@ Do the same for `samuel` / `ceo` → `/samuel`
 
 For the root of the subdomain you can also redirect `https://massimo.smartsquad.io/` → `/massimo`
 
-### For clean URLs in the address bar (optional, more advanced)
+### For clean URLs in the address bar (experimental)
 
-Use a Cloudflare Worker that proxies the GitHub Pages origin and rewrites paths/assets if you want the visitor to stay on `massimo.smartsquad.io` without seeing the github.io path.
+> Not deployed. Known issue: on the subdomain root the Vue router sees `/` and renders the home page after hydration. Use the Redirect Rules.
 
-Or attach a custom domain to the Pages project (e.g. `bio.smartsquad.io`) and then use sub-sub paths or separate rules.
+Use a small Cloudflare Worker so the address bar stays on the nice subdomain.
+
+Example worker in `cf/subdomain-proxy.js`.
+
+Deploy steps:
+1. Workers & Pages → Create Worker → paste the code.
+2. Add routes:
+   - `massimo.smartsquad.io/*`
+   - `cto.smartsquad.io/*`
+   - `samuel.smartsquad.io/*`
+   - `ceo.smartsquad.io/*`
+3. (Optional) add a KV or just hardcode the origin as in the file.
+
+This way people see `massimo.smartsquad.io` while the content comes from GitHub Pages.
 
 ### Admin API
 
