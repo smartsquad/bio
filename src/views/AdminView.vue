@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 
+import BioProfile from '@/components/BioProfile.vue'
 import type { IBio, IBioLink, TFont, TLocale } from '@/content/bio'
 import { getBio } from '@/composables/use-bios'
 import { type IBioStats, useAdminAuth } from '@/admin/use-admin-auth'
 import { FONT_STACK, loadFont } from '@/lib/load-font'
-import { avatarSources } from '@/lib/avatar'
-import { letterGlyphDataUri } from '@/lib/letter-glyph'
 import { generateAvatarSet } from '@/admin/image-to-webp'
 
 const { session, refresh, login, logout, fetchStats, saveBio, uploadMedia } = useAdminAuth()
@@ -144,20 +143,10 @@ const isCircle = computed({
   },
 })
 
-const previewAvatar = computed(() => {
-  if (avatarPreview.value) {
-    return avatarPreview.value
-  }
-  const f = form.value
-  if (!f) {
-    return ''
-  }
-  return (
-    avatarSources(f.avatar)?.src ??
-    letterGlyphDataUri(f.name[0], f.theme.glyphColor ?? f.theme.primary)
-  )
-})
-const previewFont = computed(() => (form.value ? FONT_STACK[form.value.theme.font] : ''))
+const previewLocale = ref<TLocale>('en')
+const publicUrl = computed(() =>
+  form.value ? `https://${form.value.slug}.smartsquad.io/` : 'https://bio.smartsquad.io/',
+)
 
 async function save() {
   if (!form.value) {
@@ -261,7 +250,7 @@ main.min-h-dvh.bg-site-background.text-site-text(v-else)
             span.font-medium.text-site-heading {{ c.count }}
         p.text-sm.text-site-muted(v-else) —
 
-  section.mx-auto.grid.max-w-5xl.gap-6.p-4(v-else-if="form" class="lg:grid-cols-[1fr_320px]")
+  section.mx-auto.grid.max-w-6xl.gap-6.p-4(v-else-if="form" class="xl:grid-cols-[minmax(0,1fr)_minmax(380px,520px)]")
     .flex.flex-col.gap-5
       fieldset.rounded-2xl.border.border-site-border.bg-site-surface.p-4.flex.flex-col.gap-3
         legend.px-1.text-sm.font-semibold.text-site-heading Profile
@@ -359,25 +348,36 @@ main.min-h-dvh.bg-site-background.text-site-text(v-else)
         span.text-sm.text-green-600(v-if="message") {{ message }}
         span.text-sm.text-red-500(v-if="error") {{ error }}
 
-    aside.flex.flex-col.gap-2
-      .text-xs.uppercase.tracking-wide.text-site-muted Live preview
-      .rounded-3xl.border.border-site-border.p-5.flex.flex-col.items-center.gap-3.text-center(
-        :style="{ background: form.theme.primary + '14', fontFamily: previewFont }"
+    aside.flex.flex-col.gap-2(class="xl:sticky xl:top-20 xl:self-start")
+      .flex.items-center.justify-between.gap-2
+        .text-xs.uppercase.tracking-wide.text-site-muted Live preview
+        .flex.items-center.gap-2
+          button.rounded.px-2(
+            type="button"
+            class="py-0.5 text-xs"
+            :class="previewLocale === 'en' ? 'bg-site-heading text-site-background' : 'text-site-muted'"
+            @click="previewLocale = 'en'"
+          ) EN
+          button.rounded.px-2(
+            type="button"
+            class="py-0.5 text-xs"
+            :class="previewLocale === 'it' ? 'bg-site-heading text-site-background' : 'text-site-muted'"
+            @click="previewLocale = 'it'"
+          ) IT
+      a.text-xs.text-site-secondary.no-underline(
+        :href="publicUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+      ) Open public page ↗
+      .overflow-auto.rounded-2xl.border.border-site-border.bg-site-background(
+        class="max-h-[calc(100dvh-8rem)]"
       )
-        img.size-24.object-cover(
-          v-if="previewAvatar"
-          :src="previewAvatar"
-          :style="{ borderRadius: `${form.theme.avatarRadius}px`, border: `${form.theme.avatarBorderWidth}px solid ${form.theme.avatarBorderColor}` }"
+        BioProfile(
+          :bio="form"
+          :locale="previewLocale"
+          :avatar-override="avatarPreview"
+          :interactive="false"
         )
-        div(:style="{ fontWeight: 600, color: '#1a1a1a' }") {{ form.name }}
-        div(:style="{ fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: form.theme.secondary }") {{ form.content.en.eyebrow }}
-        p.text-xs(:style="{ color: '#555', maxWidth: '15rem' }") {{ form.content.en.tagline }}
-        .flex.w-full.flex-col.gap-2.pt-2
-          .px-3.py-2.text-xs.text-white(
-            v-for="(l, i) in form.links"
-            :key="`pv${i}`"
-            :style="{ background: l.primary ? '#1a1a1a' : form.theme.primary, borderRadius: `${form.theme.cardRadius}px` }"
-          ) {{ l.label.en || l.id }}
 </template>
 
 <style scoped lang="scss">
