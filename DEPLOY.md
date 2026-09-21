@@ -51,44 +51,70 @@ This makes CF proxy to GitHub Pages.
 
 Then the subdomains can use the Worker or redirect rules.
 
-### Recommended: Clean subdomain mapping (massimo.smartsquad.io → bio.smartsquad.io/massimo)
+### Per i subdomains (massimo.smartsquad.io → bio.smartsquad.io/massimo)
 
-**Goal**: `massimo.smartsquad.io` (and `cto.smartsquad.io`) must clearly serve the same content as `bio.smartsquad.io/massimo`, and `samuel.smartsquad.io` / `ceo.smartsquad.io` for Samuel.
+**Obiettivo**: Quando qualcuno visita `massimo.smartsquad.io` deve vedere esattamente il contenuto di `bio.smartsquad.io/massimo` (stesso per samuel/ceo e gli alias cto/ceo). L'URL nella barra deve rimanere pulito sul subdomain.
 
-#### Experimental: Cloudflare Worker proxy (not deployed)
+#### Sperimentale: Cloudflare Worker proxy (non deployato)
 
-> Not deployed. Known issue: on the subdomain root the Vue router sees `/` and renders the home page after hydration. Use the Redirect Rules.
+> Non deployato. Problema noto: sulla root del subdomain il router Vue vede `/` e dopo l'idratazione mostra la home. Usa le Redirect Rules.
 
-Use the ready-made worker:
+Segui questi passi **esatti**:
 
-1. Go to Cloudflare → Workers & Pages → Create Worker
-2. Name it e.g. `smartsquad-bio-subdomains`
-3. Delete the default code and paste the entire content of `cf/subdomain-proxy.js`
-4. Save and Deploy
-5. Go to the Worker → **Triggers** → **Custom Domains** (or Routes) and add:
-   - `massimo.smartsquad.io/*`
-   - `cto.smartsquad.io/*`
-   - `samuel.smartsquad.io/*`
-   - `ceo.smartsquad.io/*`
+1. Apri https://dash.cloudflare.com e vai nel tuo account.
+2. Nel menu a sinistra clicca **Workers & Pages**.
+3. Clicca il pulsante blu **Create** (o "Create a Worker").
+4. Dai un nome al Worker, per esempio: `smartsquad-bio-proxy`
+5. Clicca **Create Worker**.
+6. Ora sei nell'editor del codice.
+   - Cancella tutto il codice di default che c'è dentro.
+   - Apri il file nel repo: `cf/subdomain-proxy.js`
+   - Copia **tutto** il contenuto di quel file.
+   - Incolla nel grande box dell'editor.
+7. In alto a destra clicca **Deploy** (o Save and Deploy).
+8. Aspetta che dica "Worker deployed successfully".
+9. Ora vai su **Triggers** (nel menu del Worker, di solito in alto o a sinistra).
+10. Clicca **Add Custom Domain** (o "Custom Domains").
+11. Aggiungi uno per uno questi 4 domini (clicca Add dopo ognuno):
+    - `massimo.smartsquad.io`
+    - `cto.smartsquad.io`
+    - `samuel.smartsquad.io`
+    - `ceo.smartsquad.io`
 
-This Worker does exactly:
-- `massimo.smartsquad.io` → serves `bio.smartsquad.io/massimo`
-- `cto.smartsquad.io` → same
-- Same logic for Samuel side
-- Assets are correctly loaded from the main domain
-- Address bar stays on the subdomain
+Fatto. Cloudflare ora instrada automaticamente le richieste dai subdomains al Worker, che a sua volta prende il contenuto corretto da `bio.smartsquad.io/massimo` (o /samuel) e lo serve mantenendo l'URL pulito.
 
-#### Recommended (live): Redirect Rules
+**Nota**: Assicurati che i domini siano "Proxied" (nuvola arancione) in DNS.
 
-Use Cloudflare Redirect Rules (the visitor will see `bio.smartsquad.io` in the URL after the click):
+#### Consigliata (attiva): Redirect Rules (l'URL cambia)
 
-**Rule Massimo + CTO**
-- When: `http.host in {"massimo.smartsquad.io" "cto.smartsquad.io"}`
-- Then: Redirect to `https://bio.smartsquad.io/massimo` (Status 301 or 302)
+Se non vuoi usare il Worker per ora, usa invece **Redirect Rules** (più facile ma l'utente vedrà bio.smartsquad.io nell'URL):
 
-**Rule Samuel + CEO**
-- When: `http.host in {"samuel.smartsquad.io" "ceo.smartsquad.io"}`
-- Then: Redirect to `https://bio.smartsquad.io/samuel`
+Vai su Cloudflare → il tuo dominio → Rules → Redirect Rules → Create Rule
+
+**Regola per Massimo + CTO**:
+- Rule name: Massimo mapping
+- When incoming requests match: 
+  - Field: Hostname
+  - Operator: is in
+  - Value: `massimo.smartsquad.io,cto.smartsquad.io`
+- Then:
+  - Redirect to: `https://bio.smartsquad.io/massimo`
+  - Status: 301 (o 302)
+  - Preserve query string: Yes
+
+**Regola per Samuel + CEO**:
+- Stessa cosa ma con `samuel.smartsquad.io,ceo.smartsquad.io`
+- Redirect to: `https://bio.smartsquad.io/samuel`
+
+Salva e testa.
+
+---
+
+Una volta fatto uno dei due metodi, apri in incognito:
+- https://massimo.smartsquad.io
+- https://bio.smartsquad.io/massimo
+
+Devono mostrare lo stesso contenuto.
 
 ### Clean subdomain experience (experimental)
 

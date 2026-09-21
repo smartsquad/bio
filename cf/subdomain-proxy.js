@@ -1,23 +1,33 @@
 /**
  * Cloudflare Worker: Clean subdomain proxy for smartsquad-bio
  *
- * This makes:
- *   massimo.smartsquad.io  →  bio.smartsquad.io/massimo   (content served cleanly)
- *   cto.smartsquad.io      →  bio.smartsquad.io/massimo
- *   samuel.smartsquad.io   →  bio.smartsquad.io/samuel
- *   ceo.smartsquad.io      →  bio.smartsquad.io/samuel
+ * FAI QUESTO PER FAR FUNZIONARE:
+ * massimo.smartsquad.io   →  bio.smartsquad.io/massimo   (stesso contenuto, URL pulito)
+ * cto.smartsquad.io       →  bio.smartsquad.io/massimo
+ * samuel.smartsquad.io    →  bio.smartsquad.io/samuel
+ * ceo.smartsquad.io       →  bio.smartsquad.io/samuel
  *
- * The visitor stays on the nice subdomain in the address bar.
+ * === PASSI ESATTI (copia-incolla) ===
  *
- * Setup:
- * 1. Create a Worker in Cloudflare (e.g. name: smartsquad-bio-subdomains)
- * 2. Paste this code.
- * 3. Add Custom Domains (recommended) or Routes:
- *      massimo.smartsquad.io/*
- *      cto.smartsquad.io/*
- *      samuel.smartsquad.io/*
- *      ceo.smartsquad.io/*
- * 4. (Optional but recommended) Set the Worker to "orange cloud" proxied.
+ * 1. Vai su https://dash.cloudflare.com
+ * 2. Clicca "Workers & Pages" nel menu a sinistra
+ * 3. Clicca "Create" → "Create a Worker"
+ * 4. Nome: smartsquad-bio-proxy   (o quello che vuoi)
+ * 5. Clicca "Create Worker"
+ * 6. Cancella TUTTO il codice che c'è nell'editor
+ * 7. Apri questo file nel tuo repo: cf/subdomain-proxy.js
+ * 8. Copia TUTTO il codice qui sotto (da export default { ... in poi)
+ * 9. Incolla nell'editor di Cloudflare
+ *10. Clicca "Deploy" in alto a destra
+ *11. Vai su "Triggers" (nel menu del Worker)
+ *12. Clicca "Add Custom Domain"
+ *13. Aggiungi questi 4 domini uno per uno:
+ *    - massimo.smartsquad.io
+ *    - cto.smartsquad.io
+ *    - samuel.smartsquad.io
+ *    - ceo.smartsquad.io
+ *
+ * Fatto. Ora i subdomains funzionano.
  */
 
 const ORIGIN = 'https://bio.smartsquad.io';
