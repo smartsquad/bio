@@ -12,6 +12,8 @@ After enabling, re-run the "Deploy site" workflow (or push to master).
 
 Then go to Settings → Pages and set **Custom domain** to `bio.smartsquad.io`.
 
+After adding the custom domain (and GH verifies the DNS), re-run the deploy workflow.
+
 The site will be published at:
 
 https://bio.smartsquad.io/
@@ -92,7 +94,7 @@ bun dev
 If you want the live editor:
 
 1. Deploy the Worker (needs secrets: `CLOUDFLARE_*`, `SESSION_SECRET`, `ADMIN_GITHUB_TOKEN`, `ADMIN_USERS`, `POSTHOG_READ_KEY`).
-2. Set `VITE_ADMIN_API` repo variable to `https://api.smartsquad.io`.
+2. Set `VITE_ADMIN_API` repo variable to `https://api.bio.smartsquad.io`.
 3. Generate users with `bun worker/hash-password.ts`.
 
 See the main README for full details.
