@@ -102,6 +102,10 @@ export function useAdminAuth() {
     return api<IBioStats>(`/stats?range=${range}`)
   }
 
+  function loadBio(): Promise<IBio> {
+    return api<IBio>('/bio')
+  }
+
   function saveBio(bio: IBio): Promise<{ ok: boolean }> {
     return api<{ ok: boolean }>('/bio', { method: 'POST', body: JSON.stringify(bio) })
   }
@@ -113,5 +117,5 @@ export function useAdminAuth() {
     })
   }
 
-  return { session, refresh, login, logout, fetchStats, saveBio, uploadMedia }
+  return { session, refresh, login, logout, fetchStats, loadBio, saveBio, uploadMedia }
 }

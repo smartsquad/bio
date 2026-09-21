@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import { computed, onMounted, ref, toRaw, watch, watchEffect } from 'vue'
 
 import BioProfile from '@/components/BioProfile.vue'
 import type { IBio, IBioLink, TFont, TLocale } from '@/content/bio'
@@ -8,7 +8,7 @@ import { type IBioStats, useAdminAuth } from '@/admin/use-admin-auth'
 import { FONT_STACK, loadFont } from '@/lib/load-font'
 import { generateAvatarSet } from '@/admin/image-to-webp'
 
-const { session, refresh, login, logout, fetchStats, saveBio, uploadMedia } = useAdminAuth()
+const { session, refresh, login, logout, fetchStats, loadBio, saveBio, uploadMedia } = useAdminAuth()
 
 const tab = ref<'stats' | 'editor'>('stats')
 const form = ref<IBio | null>(null)
@@ -52,13 +52,17 @@ function blankBio(slug: string): IBio {
   }
 }
 
-function initForm() {
+async function initForm() {
   if (!session.value) {
     return
   }
-  const existing = getBio(session.value.slug)
-  form.value = structuredClone(existing ?? blankBio(session.value.slug))
   avatarPreview.value = null
+  try {
+    form.value = await loadBio()
+  } catch {
+    const existing = getBio(session.value.slug)
+    form.value = structuredClone(existing ?? blankBio(session.value.slug))
+  }
 }
 
 async function loadStats() {
@@ -73,7 +77,7 @@ async function loadStats() {
 
 onMounted(async () => {
   if (await refresh()) {
-    initForm()
+    await initForm()
     void loadStats()
   }
 })
@@ -90,7 +94,7 @@ async function doLogin() {
   loginError.value = ''
   try {
     await login(loginUser.value, loginPass.value)
-    initForm()
+    await initForm()
     void loadStats()
   } catch (e) {
     loginError.value = String(e)
@@ -156,8 +160,9 @@ async function save() {
   message.value = ''
   error.value = ''
   try {
-    await saveBio(form.value)
-    message.value = 'Saved — the site will rebuild shortly.'
+    const payload = JSON.parse(JSON.stringify(toRaw(form.value))) as IBio
+    await saveBio(payload)
+    message.value = 'Saved to GitHub. Reload the public page in 1–2 minutes.'
   } catch (e) {
     error.value = String(e)
   } finally {

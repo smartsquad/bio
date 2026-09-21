@@ -222,6 +222,33 @@ async function handleLogin(request: Request, env: Env): Promise<Response> {
   })
 }
 
+async function ghGetJson(env: Env, path: string): Promise<unknown> {
+  const url = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${path}?ref=${env.GITHUB_BRANCH}`
+  const res = await fetch(url, { headers: ghHeaders(env) })
+  if (!res.ok) {
+    throw new Error(`GitHub GET ${path} failed: ${res.status}`)
+  }
+  const body = (await res.json()) as { content?: string; encoding?: string }
+  if (!body.content) {
+    throw new Error(`GitHub GET ${path} returned no content`)
+  }
+  const bin = atob(body.content.replace(/\n/g, ''))
+  const text = new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)))
+  return JSON.parse(text)
+}
+
+async function handleGetBio(env: Env, session: ISessionPayload): Promise<Response> {
+  if (!SLUG_RE.test(session.slug)) {
+    return json({ error: 'invalid session' }, env, 400)
+  }
+  try {
+    const bio = await ghGetJson(env, `content/bios/${session.slug}.json`)
+    return json(bio, env)
+  } catch (err) {
+    return json({ error: String(err) }, env, 502)
+  }
+}
+
 async function handleBio(request: Request, env: Env, session: ISessionPayload): Promise<Response> {
   const bio = (await request.json().catch(() => null)) as { slug?: string } | null
   if (!bio || typeof bio.slug !== 'string') {
@@ -309,6 +336,9 @@ async function route(request: Request, env: Env): Promise<Response> {
     }
     if (pathname === '/stats' && request.method === 'GET') {
       return await handleStats(request, env, session)
+    }
+    if (pathname === '/bio' && request.method === 'GET') {
+      return await handleGetBio(env, session)
     }
     if (pathname === '/bio' && request.method === 'POST') {
       return await handleBio(request, env, session)
