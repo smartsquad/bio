@@ -40,7 +40,7 @@ function isAssetPath(pathname) {
   if (ASSET_PREFIXES.some(p => pathname.startsWith(p))) return true;
   if (ASSET_EXTENSIONS.some(ext => pathname.endsWith(ext))) return true;
   if (pathname === '/robots.txt' || pathname === '/sitemap.xml' || pathname === '/llms.txt' || pathname === '/llms-full.txt') return true;
-  if (pathname === '/favicon.ico') return true;
+  if (pathname === '/favicon.ico' || pathname === '/favicon-32.png' || pathname === '/apple-touch-icon.png') return true;
   return false;
 }
 

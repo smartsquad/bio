@@ -99,7 +99,9 @@ useHead({
   htmlAttrs: { lang: () => locale.value },
   link: [
     { rel: 'canonical', href: () => canonical.value },
-    { rel: 'icon', href: '/favicon.ico' },
+    { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
+    { rel: 'icon', type: 'image/png', href: '/favicon-32.png', sizes: '32x32' },
+    { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
   ],
   script: [{ type: 'application/ld+json', innerHTML: () => JSON.stringify(jsonLd.value) }],
 })
