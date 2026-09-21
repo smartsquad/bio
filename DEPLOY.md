@@ -36,6 +36,21 @@ Target public experience:
 
 The GitHub Pages project uses custom domain `bio.smartsquad.io`.
 
+**Important for DNS (Cloudflare):**
+
+For `bio.smartsquad.io` to work (Origin DNS error fix):
+
+In Cloudflare DNS for smartsquad.io zone, create this record:
+
+- Type: **CNAME**
+- Name: `bio`
+- Target: `smartsquad.github.io`
+- Proxy status: **Proxied** (orange cloud)
+
+This makes CF proxy to GitHub Pages.
+
+Then the subdomains can use the Worker or redirect rules.
+
 ### Recommended: Clean subdomain mapping (massimo.smartsquad.io → bio.smartsquad.io/massimo)
 
 **Goal**: `massimo.smartsquad.io` (and `cto.smartsquad.io`) must clearly serve the same content as `bio.smartsquad.io/massimo`, and `samuel.smartsquad.io` / `ceo.smartsquad.io` for Samuel.

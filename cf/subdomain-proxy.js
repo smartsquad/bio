@@ -74,11 +74,15 @@ export default {
     if (contentType.includes('text/html')) {
       let html = await res.text();
 
-      // Optional: make the canonical point to the clean subdomain
-      // html = html.replace(
-      //   /<link[^>]+rel=["']canonical["'][^>]*>/i,
-      //   `<link rel="canonical" href="https://${host}/">`
-      // );
+      // Keep canonical and og:url on the path URL so they match the sitemap.
+      html = html.replace(
+        /<link[^>]+rel=["']canonical["'][^>]*>/gi,
+        `<link rel="canonical" href="${ORIGIN}/${slug}">`
+      );
+      html = html.replace(
+        /<meta[^>]+property=["']og:url["'][^>]*>/gi,
+        `<meta property="og:url" content="${ORIGIN}/${slug}">`
+      );
 
       return new Response(html, {
         status: res.status,
