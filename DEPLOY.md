@@ -32,16 +32,20 @@ Target public experience:
 
 Current hosting: GitHub Pages at `https://smartsquad.github.io/smartsquad-bio/`
 
-### Recommended simple setup (Redirects)
+### Recommended simple setup (Redirects) - quick start
 
-In Cloudflare for the `smartsquad.io` zone create **Redirect Rules** (or use a Worker):
+In Cloudflare → Rules → Redirect Rules, create two rules:
 
-Single Rule example (Dynamic Redirect):
-
+**Rule 1 - Massimo side**
+- Name: massimo + cto
 - When: `(http.host eq "massimo.smartsquad.io" or http.host eq "cto.smartsquad.io")`
-- Then: redirect to `https://smartsquad.github.io/smartsquad-bio/massimo` (301 or 302), preserve query string.
+- Then: Dynamic redirect → `https://smartsquad.github.io/smartsquad-bio/massimo${1}` (or just hardcode `/massimo`)
 
-Do the same for `samuel` / `ceo` → `/samuel`
+**Rule 2 - Samuel side**
+- When: `(http.host eq "samuel.smartsquad.io" or http.host eq "ceo.smartsquad.io")`
+- Then: redirect to `/samuel`
+
+For even cleaner experience (address bar stays on nice subdomain), use the Worker in `cf/subdomain-proxy.js`.
 
 For the root of the subdomain you can also redirect `https://massimo.smartsquad.io/` → `/massimo`
 
