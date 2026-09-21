@@ -25,7 +25,7 @@ export const en = {
     },
   },
   footer: {
-    copyright: '© 2026 Massimo De Luisa',
+    copyright: '© 2026 Smart Squad',
     licenseAriaLabel: 'License (opens in new tab)',
   },
 } as const

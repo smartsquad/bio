@@ -1,6 +1,6 @@
 {
-  "slug": "massimo",
-  "name": "Massimo De Luisa",
+  "slug": "samuel",
+  "name": "Samuel Burlon",
   "avatar": "",
   "site": "https://smartsquad.io",
   "siteCard": {
@@ -8,48 +8,48 @@
     "image": ""
   },
   "theme": {
-    "primary": "#3b82f6",
-    "secondary": "#1e40af",
-    "glyphColor": "#1e40af",
+    "primary": "#10b981",
+    "secondary": "#047857",
+    "glyphColor": "#047857",
     "font": "geist-sans",
     "cardRadius": 16,
     "avatarRadius": 9999,
     "avatarBorderWidth": 2,
-    "avatarBorderColor": "#1e40af"
+    "avatarBorderColor": "#047857"
   },
   "content": {
     "en": {
-      "eyebrow": "CTO & Co-founder @ Smart Squad",
-      "tagline": "Platforms, mobile apps and AI-assisted workflows that stay simple under pressure."
+      "eyebrow": "CEO & Co-founder @ Smart Squad",
+      "tagline": "Turning complex problems into elegant software. Building products and teams that deliver."
     },
     "it": {
-      "eyebrow": "CTO & Co-founder @ Smart Squad",
-      "tagline": "Piattaforme, app mobile e flussi con AI che restano semplici sotto pressione."
+      "eyebrow": "CEO & Co-founder @ Smart Squad",
+      "tagline": "Trasformo problemi complessi in software elegante. Creo prodotti e team che consegnano."
     },
     "ja": {
-      "eyebrow": "CTO・共同創業者 @ Smart Squad",
-      "tagline": "プレッシャーのかかる状況でもシンプルさを保つ、プラットフォーム、モバイルアプリ、AI支援ワークフロー。"
+      "eyebrow": "CEO・共同創業者 @ Smart Squad",
+      "tagline": "複雑な問題をエレガントなソフトウェアに変える。成果を出す製品とチームを構築。"
     },
     "ru": {
-      "eyebrow": "CTO и соучредитель @ Smart Squad",
-      "tagline": "Платформы, мобильные приложения и рабочие процессы с поддержкой ИИ, которые остаются простыми даже под нагрузкой."
+      "eyebrow": "CEO и соучредитель @ Smart Squad",
+      "tagline": "Превращаю сложные проблемы в элегантное ПО. Создаю продукты и команды, которые приносят результат."
     },
     "uk": {
-      "eyebrow": "CTO та співзасновник @ Smart Squad",
-      "tagline": "Платформи, мобільні застосунки та робочі процеси з підтримкою ШІ, які залишаються простими навіть під навантаженням."
+      "eyebrow": "CEO та співзасновник @ Smart Squad",
+      "tagline": "Перетворюю складні проблеми на елегантне ПЗ. Будую продукти та команди, які дають результат."
     }
   },
   "links": [
     {
       "id": "book",
       "label": {
-        "en": "Book a 30-min call",
-        "it": "Prenota una call di 30 min",
-        "ja": "30分の通話を予約",
-        "ru": "Записаться на 30-минутный звонок",
-        "uk": "Записатися на 30-хвилинний дзвінок"
+        "en": "Book a 30-min intro",
+        "it": "Prenota un'intro di 30 min",
+        "ja": "30分の紹介通話を予約",
+        "ru": "Записаться на 30-минутное знакомство",
+        "uk": "Записатися на 30-хвилинне знайомство"
       },
-      "href": "https://cal.com/massimodeluisa/30min",
+      "href": "https://cal.com/samuelburlon/intro",
       "icon": "mdi:calendar-check-outline",
       "primary": true,
       "external": true
@@ -63,7 +63,7 @@
         "ru": "Написать мне",
         "uk": "Написати мені"
       },
-      "href": "mailto:massimo@smartsquad.io",
+      "href": "mailto:samuel@smartsquad.io",
       "icon": "mdi:email-outline"
     },
     {
@@ -84,7 +84,7 @@
     {
       "id": "github",
       "label": { "en": "GitHub", "it": "GitHub", "ja": "GitHub", "ru": "GitHub", "uk": "GitHub" },
-      "href": "https://github.com/massimodeluisa",
+      "href": "https://github.com/samuelburlon",
       "icon": "mdi:github",
       "color": "#181717",
       "mono": true,
@@ -100,7 +100,7 @@
         "ru": "LinkedIn",
         "uk": "LinkedIn"
       },
-      "href": "https://www.linkedin.com/in/massimodeluisa",
+      "href": "https://www.linkedin.com/in/samuelburlon",
       "icon": "mdi:linkedin",
       "color": "#0A66C2",
       "external": true,
@@ -109,7 +109,7 @@
     {
       "id": "x",
       "label": { "en": "X", "it": "X", "ja": "X", "ru": "X", "uk": "X" },
-      "href": "https://x.com/massimodeluisa",
+      "href": "https://x.com/samuelburlon",
       "icon": "simple-icons:x",
       "color": "#000000",
       "mono": true,

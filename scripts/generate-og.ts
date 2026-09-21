@@ -251,26 +251,26 @@ async function buildHomeCard(allBios: IBio[]): Promise<ISatoriNode> {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'rgba(18,17,17,0.62)',
-        borderTop: '2px solid #b68370',
-        borderBottom: '2px solid #b68370',
+        borderTop: '2px solid #10b981',
+        borderBottom: '2px solid #10b981',
       },
       children: [
-        text('DELUISA.BIO', {
+        text('SMARTSQUAD.IO', {
           fontFamily: 'JetBrains Mono',
           fontSize: 24,
-          color: '#b68370',
+          color: '#10b981',
           letterSpacing: '6px',
           marginBottom: '14px',
         }),
-        text('De Luisa', {
+        text('Smart Squad', {
           fontFamily: 'Inter',
-          fontSize: 120,
+          fontSize: 96,
           fontWeight: 700,
           color: '#ffffff',
           letterSpacing: '-3px',
           lineHeight: 1,
         }),
-        text('I nostri link, in un posto solo.', {
+        text('Founders links', {
           fontFamily: 'JetBrains Mono',
           fontSize: 26,
           color: 'rgba(255,255,255,0.82)',

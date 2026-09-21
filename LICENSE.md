@@ -10,7 +10,7 @@ Applies to the application source: code, components, styles, build configuration
 and tooling scripts (e.g. `*.vue`, `*.ts`, `*.scss`, `*.css`, `vite.config.ts`,
 `scripts/**`, `worker/**`).
 
-Copyright (c) 2026 Massimo De Luisa
+Copyright (c) 2026 Smart Squad (forked from de-luisa-bio by Massimo De Luisa)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,14 +32,11 @@ SOFTWARE.
 
 ## Content — © All Rights Reserved
 
-The MIT grant above does **not** cover the bios' content, which is the personal
-work of the De Luisa family:
+The MIT grant above does **not** cover the bios' content, which is owned by the authors:
 
 - the bio copy, taglines and link data (`content/bios/**`),
-- avatars, photographs and brand assets (`public/**`),
-- the names, likenesses, copy, and visual branding of the De Luisa family.
+- avatars, photographs and brand assets (`public/**`).
 
-Copyright © 2026 Massimo De Luisa. All rights reserved. This content may not be
-copied, reproduced, modified, republished, or distributed, in whole or in part,
-without prior written permission. You are, of course, welcome to read it at
-[deluisa.bio](https://deluisa.bio).
+Copyright © 2026 Smart Squad (Massimo De Luisa & Samuel Burlon). All rights reserved.
+This is an adaptation of the original de-luisa-bio project.
+You are welcome to read the live site at the configured Smart Squad subdomains.

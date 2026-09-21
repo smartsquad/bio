@@ -44,12 +44,12 @@ const env = {
   ADMIN_USERS: vars.ADMIN_USERS ?? '[]',
   SESSION_SECRET: vars.SESSION_SECRET ?? 'dev-secret',
   GITHUB_TOKEN: vars.GITHUB_TOKEN ?? '',
-  GITHUB_REPO: vars.GITHUB_REPO ?? 'massimodeluisa/de-luisa-bio',
-  GITHUB_BRANCH: vars.GITHUB_BRANCH ?? 'main',
+  GITHUB_REPO: vars.GITHUB_REPO ?? 'smartsquad/bio',
+  GITHUB_BRANCH: vars.GITHUB_BRANCH ?? 'master',
   POSTHOG_HOST: vars.POSTHOG_HOST ?? 'https://eu.posthog.com',
   POSTHOG_PROJECT_ID: vars.POSTHOG_PROJECT_ID ?? '',
   POSTHOG_READ_KEY: vars.POSTHOG_READ_KEY ?? '',
-  ALLOWED_ORIGIN: vars.ALLOWED_ORIGIN ?? 'https://deluisa.bio',
+  ALLOWED_ORIGIN: vars.ALLOWED_ORIGIN ?? 'https://smartsquad.io',
   storage: localStorage,
 } satisfies Env
 

@@ -30,7 +30,7 @@ export const ru: LegalContent = {
       {
         heading: 'Оператор данных',
         body: [
-          'Этот сайт (deluisa.bio) управляется семьёй De Luisa, которая является оператором обработки данных, описанной здесь. По любым вопросам, связанным с конфиденциальностью, вы можете написать на massimodeluisa@me.com.',
+          'Этот сайт (smartsquad.io) управляется Smart Squad, которая является оператором обработки данных, описанной здесь. По любым вопросам, связанным с конфиденциальностью, вы можете написать на team@smartsquad.io.',
         ],
       },
       {
@@ -107,7 +107,7 @@ export const ru: LegalContent = {
         rows: [
           {
             name: 'cc_cookie',
-            provider: 'deluisa.bio',
+            provider: 'smartsquad-bio',
             purpose: 'Хранит ваши решения о согласии на использование cookie.',
             duration: '6 месяцев',
           },

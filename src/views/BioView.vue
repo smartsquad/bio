@@ -12,8 +12,8 @@ import { FONT_STACK, loadFont } from '@/lib/load-font'
 import { ICONS } from '@/generated/icons'
 import { useI18n } from '@/i18n'
 
-const SITE_ORIGIN = 'https://deluisa.bio'
-const LICENSE_URL = 'https://github.com/massimodeluisa/de-luisa-bio/blob/main/LICENSE.md'
+const SITE_ORIGIN = 'https://smartsquad.io'
+const LICENSE_URL = 'https://github.com/smartsquad/bio/blob/master/LICENSE.md'
 
 const { t, locale } = useI18n()
 const { slug, bio, notFound } = useCurrentBio()
@@ -66,15 +66,15 @@ watch(
 )
 
 const seoTitle = computed(() => {
-  const name = bio.value?.name ?? 'De Luisa'
+  const name = bio.value?.name ?? 'Smart Squad'
   return content.value?.eyebrow ? `${name} — ${content.value.eyebrow}` : name
 })
 const seoDescription = computed(
   () =>
     content.value?.tagline ||
-    `Official websites, contact links and public social profiles for ${bio.value?.name ?? 'the De Luisa family'}.`,
+    `Official websites, contact links and public social profiles for ${bio.value?.name ?? 'Smart Squad'}.`,
 )
-const imageAlt = computed(() => `${bio.value?.name ?? 'De Luisa'} — De Luisa`)
+const imageAlt = computed(() => `${bio.value?.name ?? 'Smart Squad'} — Smart Squad`)
 const siteCardDomain = computed(() => bio.value?.siteCard?.url.replace(/^https?:\/\//, '') ?? '')
 
 useSeoMeta({
@@ -84,7 +84,7 @@ useSeoMeta({
   ogTitle: () => seoTitle.value,
   ogDescription: () => seoDescription.value,
   ogType: 'profile',
-  ogSiteName: 'De Luisa',
+  ogSiteName: 'Smart Squad',
   ogUrl: () => canonical.value,
   ogImage: () => ogImage.value,
   ogImageWidth: '1200',
@@ -452,7 +452,7 @@ main.flex.min-h-dvh.flex-col.items-center.justify-center.gap-3.bg-site-backgroun
 )
   h1.text-2xl.font-semibold.text-site-heading 404
   p.text-sm.text-site-muted No bio found for “{{ slug }}”.
-  a.text-sm.text-site-secondary.no-underline(href="/") ← deluisa.bio
+  a.text-sm.text-site-secondary.no-underline(href="/") ← smartsquad.io
 </template>
 
 <style scoped lang="scss">

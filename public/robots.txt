@@ -1,6 +1,6 @@
-# De Luisa — robots.txt
-# Public family link-in-bio. Search engines and AI assistants/agents are welcome.
-# LLM overview: https://deluisa.bio/llms.txt  ·  full: https://deluisa.bio/llms-full.txt
+# Smart Squad — robots.txt
+# Public founders link-in-bio. Search engines and AI assistants/agents are welcome.
+# LLM overview: https://smartsquad.io/llms.txt  ·  full: https://smartsquad.io/llms-full.txt
 
 User-agent: *
 Allow: /
@@ -25,4 +25,4 @@ User-agent: CCBot
 Allow: /
 Disallow: /admin
 
-Sitemap: https://deluisa.bio/sitemap.xml
+Sitemap: https://smartsquad.io/sitemap.xml

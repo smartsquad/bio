@@ -33,5 +33,5 @@ jobs:
           bunx wrangler deploy --x-autoconfig=false $CFG
           printf '%s' "$SESSION_SECRET"     | bunx wrangler secret put SESSION_SECRET   $CFG
           printf '%s' "$ADMIN_GITHUB_TOKEN" | bunx wrangler secret put GITHUB_TOKEN      $CFG
-          printf '%s' "$POSTHOG_READ_KEY"   | bunx wrangler secret put POSTHOG_READ_KEY  $CFG
+          if [ -n "$POSTHOG_READ_KEY" ]; then printf '%s' "$POSTHOG_READ_KEY" | bunx wrangler secret put POSTHOG_READ_KEY $CFG; fi
           printf '%s' "$ADMIN_USERS"        | bunx wrangler secret put ADMIN_USERS       $CFG

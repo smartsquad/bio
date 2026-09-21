@@ -7,7 +7,7 @@ import type { IBio } from '../src/content/bio'
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const DIST = join(ROOT, 'dist')
 const BIOS_DIR = join(ROOT, 'content/bios')
-const ORIGIN = 'https://deluisa.bio'
+const ORIGIN = 'https://smartsquad.io'
 
 if (!existsSync(DIST)) {
   console.error('[seo] dist/ not found — run after `vite-ssg build`.')
@@ -31,9 +31,9 @@ const sitemap =
 writeFileSync(join(DIST, 'sitemap.xml'), sitemap)
 
 const indexLines = [
-  '# De Luisa',
+  '# Smart Squad',
   '',
-  '> The De Luisa family link-in-bio. One page per person with their links and social profiles. Canonical URLs are https://deluisa.bio/<slug>.',
+  '> Smart Squad founders link-in-bio. One page per founder with their links and social profiles. Canonical URLs are https://smartsquad.io/<slug> (massimo.smartsquad.io, samuel.smartsquad.io, cto.smartsquad.io, ceo.smartsquad.io).',
   '',
   '## People',
   ...bios.map((b) => {
@@ -77,9 +77,9 @@ const fullSections = bios.map((b) => {
 })
 
 const full = [
-  '# De Luisa — full content for LLMs',
+  '# Smart Squad — full content for LLMs',
   '',
-  '> One section per family member with their role, tagline, links and social profiles.',
+  '> One section per founder with their role, tagline, links and social profiles.',
   '',
   fullSections.join('\n\n'),
   '',

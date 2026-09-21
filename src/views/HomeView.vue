@@ -30,16 +30,13 @@ const tileAvatar = (b: IBio) =>
     src: letterGlyphDataUri(b.name[0], b.theme.glyphColor ?? b.theme.primary),
   }
 
-const firstName = (name: string) => name.replace(/ De Luisa$/, '')
+const firstName = (name: string) => name.split(' ')[0] || name
 const onOpen = (slug: string) => track('home_open_bio', { bio: slug })
 
 const sortedBios = Object.values(bios).sort((a, b) => a.name.localeCompare(b.name))
 const profileCount = sortedBios.length
-const peopleCount = sortedBios.filter((b) => b.slug !== 'pasticceria').length
-const organizationCount = profileCount - peopleCount
 const socialCount = sortedBios.reduce((total, b) => total + b.socials.length, 0)
 const directLinkCount = sortedBios.reduce((total, b) => total + b.links.length, 0)
-const websiteCount = sortedBios.filter((b) => b.site).length
 
 const destinationLabels = (bio: IBio) => {
   const labels = [...bio.links, ...bio.socials].map((link) => link.label.en).filter(Boolean)
@@ -61,30 +58,30 @@ const profileDescription = (bio: IBio) => {
   return `${bio.name}'s directory page brings together ${destinations}.${role}${website} The entry is generated from the same repository data used by the visible cards, metadata and machine-readable profile information.`
 }
 
-const homeTitle = 'De Luisa Family — Official Links'
+const homeTitle = 'Smart Squad — Links'
 const homeDescription =
-  'Official De Luisa family directory with profile pages, websites, contact links and published public social destinations.'
-const homeOgImage = 'https://deluisa.bio/og/home.jpg'
+  'Official links for the Smart Squad founders. Profile pages, websites, contact links and published public social destinations for Massimo and Samuel.'
+const homeOgImage = 'https://smartsquad.io/og/home.jpg'
 
 useSeoMeta({
   title: homeTitle,
   description: homeDescription,
-  author: 'De Luisa family',
+  author: 'Smart Squad',
   ogTitle: homeTitle,
   ogDescription: homeDescription,
   ogType: 'website',
-  ogSiteName: 'De Luisa',
-  ogUrl: 'https://deluisa.bio/',
+  ogSiteName: 'Smart Squad',
+  ogUrl: 'https://smartsquad.io/',
   ogImage: homeOgImage,
   ogImageWidth: '1200',
   ogImageHeight: '630',
-  ogImageAlt: 'La famiglia De Luisa',
+  ogImageAlt: 'Smart Squad',
   ogImageType: 'image/jpeg',
   twitterCard: 'summary_large_image',
   twitterTitle: homeTitle,
   twitterDescription: homeDescription,
   twitterImage: homeOgImage,
-  twitterImageAlt: 'La famiglia De Luisa',
+  twitterImageAlt: 'Smart Squad',
   robots: 'index, follow, max-image-preview:large',
 })
 
@@ -93,69 +90,51 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'WebSite',
-      '@id': 'https://deluisa.bio/#website',
-      url: 'https://deluisa.bio/',
-      name: 'De Luisa family directory',
+      '@id': 'https://smartsquad.io/#website',
+      url: 'https://smartsquad.io/',
+      name: 'Smart Squad links',
       description: homeDescription,
       inLanguage: ['en', 'it'],
     },
     {
       '@type': 'CollectionPage',
-      '@id': 'https://deluisa.bio/#webpage',
+      '@id': 'https://smartsquad.io/#webpage',
       name: homeTitle,
       description: homeDescription,
-      url: 'https://deluisa.bio/',
+      url: 'https://smartsquad.io/',
       dateModified: __BUILD_DATE__,
-      isPartOf: { '@id': 'https://deluisa.bio/#website' },
-      about: sortedBios.map((b) => ({ '@id': `https://deluisa.bio/#${b.slug}` })),
+      isPartOf: { '@id': 'https://smartsquad.io/#website' },
+      about: sortedBios.map((b) => ({ '@id': `https://smartsquad.io/#${b.slug}` })),
       mainEntity: {
         '@type': 'ItemList',
         numberOfItems: profileCount,
         itemListElement: sortedBios.map((b, i) => ({
           '@type': 'ListItem',
           position: i + 1,
-          url: `https://deluisa.bio/${b.slug}`,
+          url: `https://smartsquad.io/${b.slug}`,
           name: b.name,
-          item: { '@id': `https://deluisa.bio/#${b.slug}` },
+          item: { '@id': `https://smartsquad.io/#${b.slug}` },
         })),
       },
     },
-    ...sortedBios.map((b) =>
-      b.slug === 'pasticceria'
-        ? {
-            '@type': 'Organization',
-            '@id': 'https://deluisa.bio/#pasticceria',
-            name: b.name,
-            url: b.site,
-            mainEntityOfPage: `https://deluisa.bio/${b.slug}`,
-            logo: {
-              '@type': 'ImageObject',
-              url: 'https://deluisa.bio/media/pasticceria-600.webp',
-            },
-            image: 'https://deluisa.bio/media/pasticceria-2000.webp',
-            description: b.content.en.eyebrow,
-            sameAs: [b.site, ...b.socials.map((s) => s.href)].filter(Boolean),
-          }
-        : {
-            '@type': 'Person',
-            '@id': `https://deluisa.bio/#${b.slug}`,
-            name: b.name,
-            url: `https://deluisa.bio/${b.slug}`,
-            image: `https://deluisa.bio/media/${b.slug}-600.webp`,
-            ...(b.content.en.eyebrow ? { jobTitle: b.content.en.eyebrow } : {}),
-            ...(b.content.en.tagline ? { description: b.content.en.tagline } : {}),
-            sameAs: b.socials.map((s) => s.href),
-          },
-    ),
+    ...sortedBios.map((b) => ({
+      '@type': 'Person',
+      '@id': `https://smartsquad.io/#${b.slug}`,
+      name: b.name,
+      url: `https://smartsquad.io/${b.slug}`,
+      ...(b.content.en.eyebrow ? { jobTitle: b.content.en.eyebrow } : {}),
+      ...(b.content.en.tagline ? { description: b.content.en.tagline } : {}),
+      sameAs: [b.site, ...b.socials.map((s) => s.href)].filter(Boolean),
+    })),
   ],
 }
 useHead({
   htmlAttrs: { lang: 'en' },
-  link: [{ rel: 'canonical', href: 'https://deluisa.bio/' }],
+  link: [{ rel: 'canonical', href: 'https://smartsquad.io/' }],
   script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(jsonLd) }],
 })
 
-useFavicon(letterGlyphDataUri('D', '#b68370', FAVICON_RADIUS))
+useFavicon(letterGlyphDataUri('S', '#10b981', FAVICON_RADIUS))
 </script>
 
 <template lang="pug">
@@ -165,12 +144,12 @@ main.relative.w-full.bg-site-background.text-site-text
   )
     h1.rounded-full.border.px-3.py-2.font-sans.text-xs.font-semibold.tracking-tight.text-white.backdrop-blur-xl(
       class="border-white/15 bg-black/45 shadow-lg shadow-black/15 sm:px-4 sm:text-sm"
-    ) De Luisa family
+    ) Smart Squad
 
   section#profiles.scroll-mt-24.flex.min-h-dvh.flex-wrap.content-stretch(
     aria-labelledby="profiles-heading"
   )
-    h2#profiles-heading.sr-only De Luisa family profiles
+    h2#profiles-heading.sr-only Smart Squad profiles
     router-link.tile.group.relative.grow.overflow-hidden.no-underline(
       v-for="p in people"
       :key="p.slug"
@@ -198,33 +177,24 @@ main.relative.w-full.bg-site-background.text-site-text
 
   article#about.machine-readable-only(data-machine-readable="true")
     div
-      p.font-mono.text-xs.font-semibold.uppercase.tracking-widest.text-site-secondary Family directory
-      h2.mt-3.text-3xl.font-semibold.tracking-tight.text-site-heading(class="sm:text-4xl") About deluisa.bio
+      p.font-mono.text-xs.font-semibold.uppercase.tracking-widest.text-site-secondary Founders
+      h2.mt-3.text-3xl.font-semibold.tracking-tight.text-site-heading(class="sm:text-4xl") About smartsquad-bio
       p.mt-6
-        | deluisa.bio is the shared link directory for the De Luisa family. It gives each listed
-        | person a stable page for the public websites, contact methods and social profiles they
-        | have chosen to publish. The home page is an index: select a portrait to open that
-        | profile, or continue through this guide for a text description of the directory. The
-        | visual cards and the text below are built from the same source records, so visitors,
-        | search engines and non-JavaScript clients receive the same names and destinations.
+        | smartsquad-bio is the shared link directory for the Smart Squad founders. It gives Massimo and Samuel
+        | a stable page for the public websites, contact methods and social profiles they have chosen to publish.
+        | The home page is an index: select a portrait to open that profile. The visual cards and the text below
+        | are built from the same source records, so visitors, search engines and non-JavaScript clients receive
+        | the same names and destinations.
       p
-        | The directory currently contains {{ profileCount }} profile pages: {{ peopleCount }} for
-        | individual family members and {{ organizationCount }} for Pasticceria De Luisa. Across
-        | those records there are {{ socialCount }} published social-profile destinations,
-        | {{ directLinkCount }} direct contact or resource links and {{ websiteCount }} website
-        | destinations. These figures are calculated from the public profile data during the site
-        | build; they are inventory counts, not audience or performance claims.
-      p
-        | Every portrait links to a canonical address under deluisa.bio. A profile may include a
-        | personal or business website, email or telephone details, a downloadable resource, a
-        | booking link, and public accounts on services such as Instagram, Facebook, LinkedIn,
-        | GitHub, X, Telegram or LINE. Not every person uses every service. An omitted field means
-        | that the corresponding profile record does not currently publish that destination.
+        | The directory currently contains {{ profileCount }} profile pages for the Smart Squad team.
+        | Across those records there are {{ socialCount }} published social-profile destinations and
+        | {{ directLinkCount }} direct contact or resource links. These figures are calculated from the public
+        | profile data during the site build.
 
       .machine-readable-only(data-machine-readable="true")
         h3 Directory at a glance
         table
-          caption Counts calculated from the public De Luisa profile records
+          caption Counts calculated from the public Smart Squad profile records
           thead
             tr
               th(scope="col") Public record type
@@ -234,27 +204,17 @@ main.relative.w-full.bg-site-background.text-site-text
               th(scope="row") Profile pages
               td {{ profileCount }}
             tr
-              th(scope="row") Individual people
-              td {{ peopleCount }}
-            tr
-              th(scope="row") Organizations
-              td {{ organizationCount }}
-            tr
               th(scope="row") Social-profile destinations
               td {{ socialCount }}
             tr
               th(scope="row") Direct contact or resource links
               td {{ directLinkCount }}
-            tr
-              th(scope="row") Profiles with website destinations
-              td {{ websiteCount }}
 
     section.mt-16(aria-labelledby="directory-heading")
       h2#directory-heading.text-2xl.font-semibold.tracking-tight.text-site-heading Directory entries
       p.mt-4.max-w-3xl
         | The summaries in this section are deliberately limited to information already shown on
-        | each page. They do not infer occupations, relationships, locations or private details.
-        | Follow a name to see the current set of links for that entry.
+        | each page. Follow a name to see the current set of links for that entry.
 
       .mt-8.grid.gap-x-10.gap-y-8(class="md:grid-cols-2")
         section(v-for="profile in sortedBios" :key="`details-${profile.slug}`")
@@ -271,26 +231,18 @@ main.relative.w-full.bg-site-background.text-site-text
       h2#use-heading.text-2xl.font-semibold.tracking-tight.text-site-heading How to use the directory
       p.mt-4
         | Start with the profile whose name or portrait you recognize. Each profile page places
-        | the person's or business's chosen identity at the top, followed by the destinations
+        | the person's chosen identity at the top, followed by the destinations
         | available for that record. Buttons use descriptive labels, and external destinations
-        | open at their published URLs. The share control copies the canonical deluisa.bio address
+        | open at their published URLs. The share control copies the canonical address
         | rather than a temporary browser state, making the profile suitable for messages,
         | contact cards and printed material.
       p
-        | Massimo De Luisa's entry is the most detailed current example. It identifies him as
-        | “CTO & Product Engineer” and describes his work as
-        | “Platforms, mobile apps and AI-assisted workflows that stay simple under pressure.”
-        | His profile publishes a website, a booking destination, email, a curriculum-vitae
-        | download and seven social accounts. That quotation comes directly from his English
-        | profile text; it is not an editorial endorsement or a rewritten biography.
+        | Massimo's entry identifies him as “CTO & Co-founder @ Smart Squad”. His profile publishes
+        | a website, booking link, email and social accounts. The quotations and links come directly
+        | from the profile JSON records.
       p
-        | Pasticceria De Luisa has a business entry rather than a personal one. Its profile
-        | identifies the activity as an artisan bakery and pastry shop and publishes its official
-        | website, email, telephone number, Instagram and Facebook destinations. Arianna, Camilla
-        | and Laura also link to the Pasticceria website from their own directory pages. Andrea's
-        | entry links to deluisaandrea.it and public contact destinations, while Giovanni and
-        | Nicole currently use smaller sets of published links. The directory preserves those
-        | differences instead of filling empty fields with assumptions.
+        | Samuel's entry identifies him as “CEO & Co-founder @ Smart Squad”. The directory keeps only
+        | the fields each person actually publishes.
 
     section#sources.scroll-mt-24.mt-16(aria-labelledby="sources-heading")
       h2#sources-heading.text-2xl.font-semibold.tracking-tight.text-site-heading Sources, structure and accuracy
@@ -337,7 +289,7 @@ main.relative.w-full.bg-site-background.text-site-text
         | The public profile owner is the source of each editable record. Because destinations can
         | change, the canonical profile page should be treated as the current directory entry.
         | External services control their own pages, availability and privacy practices. A link
-        | from deluisa.bio indicates that the destination is published in the relevant profile
+        | from smartsquad.io indicates that the destination is published in the relevant profile
         | record; it does not imply ownership of the external platform or verification by that
         | platform.
 
@@ -362,20 +314,20 @@ main.relative.w-full.bg-site-background.text-site-text
           dt
             h3.text-lg.font-semibold.text-site-heading Which URL should be shared?
           dd.mt-2.ml-0.text-site-muted
-            | Share the canonical path shown on the profile, such as deluisa.bio/massimo. Canonical
+            | Share the canonical path shown on the profile, such as smartsquad.io/massimo (or massimo.smartsquad.io). Canonical
             | metadata and the sitemap use the same path-based addresses for consistent discovery.
 
   noscript
     section.mx-auto.max-w-4xl.px-6.pb-12(aria-label="No JavaScript notice")
       h2.text-xl.font-semibold.text-site-heading JavaScript is optional
       p.mt-3.text-site-muted
-        | The De Luisa directory and all profile links are included in this HTML document. You can
+        | The Smart Squad directory and all profile links are included in this HTML document. You can
         | browse the portraits, directory entries, source notes and legal pages without enabling
         | JavaScript.
 
 footer.border-t.border-site-border.bg-site-background.px-6.py-8.text-sm.text-site-muted
   .mx-auto.flex.max-w-4xl.flex-col.justify-between.gap-4(class="sm:flex-row sm:items-center")
-    p.m-0 © {{ new Date().getFullYear() }} De Luisa
+    p.m-0 © {{ new Date().getFullYear() }} Smart Squad
     nav(aria-label="Legal and technical links")
       ul.m-0.flex.list-none.flex-wrap.gap-x-5.gap-y-2.p-0
         li

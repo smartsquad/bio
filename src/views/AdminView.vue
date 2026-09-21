@@ -195,7 +195,7 @@ const maxViews = computed(() => Math.max(1, ...paddedSeries.value.map((s) => s.v
 <template lang="pug">
 main.flex.min-h-dvh.items-center.justify-center.bg-site-background.text-site-text.p-4(v-if="!session")
   form.w-full.max-w-sm.rounded-2xl.border.border-site-border.bg-site-surface.p-6.flex.flex-col.gap-4(@submit.prevent="doLogin")
-    h1.text-lg.font-semibold.text-site-heading De Luisa Bio — Admin
+    h1.text-lg.font-semibold.text-site-heading Smart Squad Bio — Admin
     label.flex.flex-col.gap-1.text-sm
       span.text-site-muted Username
       input.rounded-lg.border.border-site-border.bg-site-background.px-3.py-2(v-model="loginUser" autocomplete="username" required)

@@ -30,7 +30,7 @@ export const en: LegalContent = {
       {
         heading: 'Data Controller',
         body: [
-          'This website (deluisa.bio) is operated by the De Luisa family, who is the data controller for the processing described here. For any privacy request you can write to massimodeluisa@me.com.',
+          'This website (smartsquad.io subs) is operated by Smart Squad, who is the data controller for the processing described here. For any privacy request you can write to team@smartsquad.io.',
         ],
       },
       {
@@ -107,7 +107,7 @@ export const en: LegalContent = {
         rows: [
           {
             name: 'cc_cookie',
-            provider: 'deluisa.bio',
+            provider: 'smartsquad-bio',
             purpose: 'Stores your cookie consent choices.',
             duration: '6 months',
           },

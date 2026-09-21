@@ -12,4 +12,4 @@ POSTHOG_READ_KEY="phx_xxx"
 
 # JSON array of admin users. Generate entries with:
 #   bun worker/hash-password.ts <user> <slug> <password>
-ADMIN_USERS='[{"user":"massimo","slug":"massimo","salt":"<hex>","passHash":"<hex>"}]'
+ADMIN_USERS='[{"user":"massimo","slug":"massimo","salt":"<hex>","passHash":"<hex>"},{"user":"samuel","slug":"samuel","salt":"<hex>","passHash":"<hex>"}]'

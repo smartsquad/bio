@@ -15,5 +15,5 @@ jobs:
       - name: AI readiness fix PR
         uses: isreadyai/fix-action@v1
         with:
-          url: https://deluisa.bio
+          url: https://smartsquad.io
           api-key: ${{ secrets.ISREADYAI_API_KEY }}

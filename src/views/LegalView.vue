@@ -21,7 +21,7 @@ onMounted(() => {
 })
 
 useHead({
-  title: computed(() => `${pageTitle.value} — De Luisa`),
+  title: computed(() => `${pageTitle.value} — Smart Squad`),
   htmlAttrs: { lang: locale },
 })
 </script>

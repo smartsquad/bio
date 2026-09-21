@@ -30,7 +30,7 @@ export const ja: LegalContent = {
       {
         heading: 'データ管理者',
         body: [
-          '本ウェブサイト (deluisa.bio) は De Luisa 家により運営されており、同家がここに記載する処理に関するデータ管理者です。プライバシーに関するご請求は massimodeluisa@me.com までご連絡ください。',
+          '本ウェブサイト (smartsquad.io) は Smart Squad により運営されており、ここに記載する処理に関するデータ管理者です。プライバシーに関するご請求は team@smartsquad.io までご連絡ください。',
         ],
       },
       {
@@ -107,7 +107,7 @@ export const ja: LegalContent = {
         rows: [
           {
             name: 'cc_cookie',
-            provider: 'deluisa.bio',
+            provider: 'smartsquad-bio',
             purpose: 'お客様の Cookie 同意の選択を保存します。',
             duration: '6か月',
           },

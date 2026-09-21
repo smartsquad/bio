@@ -1,30 +1,32 @@
-# deluisa.bio
+# smartsquad-bio
 
-Family **link-in-bio** site for the De Luisa family — one page per person, content in the repo as
+**Link-in-bio** site for the Smart Squad founders (Massimo & Samuel) — one page per person, content in the repo as
 JSON, edited through a small custom admin, with per-person SEO, OpenGraph images and favicons.
 
+Used for `massimo.smartsquad.io`, `samuel.smartsquad.io` (with aliases `cto.smartsquad.io` and `ceo.smartsquad.io`).
+
 Vue 3 + Vite 8 + Tailwind v4 + Pug + SCSS + i18next, prerendered with **vite-ssg**, deployed to
-**GitHub Pages**, with a **Cloudflare Worker** admin API.
+**GitHub Pages** (under the `smartsquad` org), with a **Cloudflare Worker** admin API and Cloudflare for subdomain routing.
 
 ## How it works
 
 - **Content** lives in `content/bios/<slug>.json` (one per person), typed by `src/content/bio.ts`
   (`IBio`). It is loaded at build time (`src/composables/use-bios.ts`).
-- **Routing** — each bio is `deluisa.bio/<slug>` (canonical). `BioView.vue` renders the resolved
-  `IBio`; the subdomain `<slug>.deluisa.bio` 301-redirects to the path (Cloudflare, see DNS below).
+- **Routing** — each bio is `smartsquad.io/<slug>` (or `<slug>.smartsquad.io`). `BioView.vue` renders the resolved
+  `IBio`. Subdomains (`massimo.smartsquad.io`, `samuel.smartsquad.io`, `cto.smartsquad.io`, `ceo.smartsquad.io`)
+  are handled via Cloudflare (301 or proxy to the correct path on the GitHub Pages site).
 - **Prerendering** — `vite-ssg` emits one static HTML per bio (`vite.config.ts` `includedRoutes`)
   so each `/<slug>` ships its own `<title>`/OG/`<meta>` (via `@unhead/vue`) for social scrapers.
 - **OG images + favicons** — generated post-build into `dist/og/<slug>.png` and
-  `dist/favicons/<slug>.svg` (`scripts/generate-og.ts`, `scripts/generate-favicons.ts`). The OG card
-  is a split layout: the person's photo on the left, a panel in their primary colour on the right.
+  `dist/favicons/<slug>.svg` (`scripts/generate-og.ts`, `scripts/generate-favicons.ts`).
 - **Theme per bio** — `IBio.theme` (primary/secondary colours, font, card radius, avatar
   radius/border) is applied via CSS variables in `BioView.vue` and configurable in the admin.
 
 ## Admin
 
-`deluisa.bio/admin` is a custom, client-only SPA (`src/views/AdminView.vue`). It talks only to the
-Cloudflare Worker (`worker/`, served at `https://api.deluisa.bio`), which is the trust boundary
-holding every secret. The Worker **must** be a subdomain of `deluisa.bio` (not its `*.workers.dev`
+`/admin` is a custom, client-only SPA (`src/views/AdminView.vue`). It talks only to the
+Cloudflare Worker (`worker/`, served at `https://api.smartsquad.io` or equivalent), which is the trust boundary
+holding every secret. The Worker **must** share a registrable domain with the site (not its `*.workers.dev`
 URL): the SPA and API then share a registrable domain, so the httpOnly session cookie is first-party
 and Safari sends it — a cross-site `*.workers.dev` API gets its cookie blocked and every call 401s.
 
@@ -69,7 +71,7 @@ bun worker/dev-server.ts # admin API on :8787 (Bun — no wrangler needed locall
 ```
 
 Set `VITE_ADMIN_API=http://localhost:8787` in `.env.local`, then log into `/admin` with a
-user from `worker/.dev.vars`. (Production deploys the Worker via wrangler — see below.)
+user from `worker/.dev.vars`. (Production deploys the Worker via wrangler.)
 
 ### Build / type-check / lint
 
@@ -81,44 +83,48 @@ bun lint
 
 ## Deploy
 
-Two GitHub Actions workflows:
+Two GitHub Actions workflows (repo lives under the `smartsquad` GitHub org):
 
 - **`.github/workflows/deploy-site.yml`** — builds and deploys `dist/` to GitHub Pages on push to
   `master`. Public values come from repo **Variables** (`VITE_POSTHOG_KEY`, `VITE_POSTHOG_HOST`,
-  `VITE_ADMIN_API` = `https://api.deluisa.bio`). `public/CNAME` pins `deluisa.bio`; a `404.html` SPA
-  fallback is added.
+  `VITE_ADMIN_API`). A `404.html` SPA fallback is added.
 - **`.github/workflows/deploy-worker.yml`** — `wrangler deploy` for `worker/` on changes, pushing
   secrets from repo **Secrets**: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `SESSION_SECRET`,
   `ADMIN_GITHUB_TOKEN` (→ Worker `GITHUB_TOKEN`), `POSTHOG_READ_KEY`, `ADMIN_USERS`. Non-secret
-  config is in `worker/wrangler.toml` (`GITHUB_REPO`, `POSTHOG_HOST`, `POSTHOG_PROJECT_ID`,
+  config is in `worker/wrangler.toml` (`GITHUB_REPO = "smartsquad/bio"`, `POSTHOG_*`,
   `ALLOWED_ORIGIN`).
 
-### DNS (Cloudflare) — path canonical, subdomain redirects
+The site is published to GitHub Pages. Cloudflare is used for the custom subdomains
+(`massimo.smartsquad.io`, `samuel.smartsquad.io`, `cto.smartsquad.io`, `ceo.smartsquad.io`) and
+the admin API custom domain.
 
-- **Apex `deluisa.bio` → GitHub Pages** (DNS-only / grey cloud, so GitHub issues the Let's Encrypt
-  cert): `A` → `185.199.108.153`, `.109.153`, `.110.153`, `.111.153`; `CAA 0 issue "letsencrypt.org"`.
-  Set + verify the custom domain in the repo's Pages settings.
-  GitHub Pages does not expose project-level response-header configuration, so the application
-  cannot add `Strict-Transport-Security` itself. To serve HSTS, proxy the apex through Cloudflare
-  and enable **SSL/TLS → Edge Certificates → HTTP Strict Transport Security** with at least
-  `max-age=31536000`; enable `includeSubDomains` only after confirming every subdomain is HTTPS.
-  Keep the apex DNS-only until that proxy migration is complete—an HTML `<meta>` tag or a
-  repository `_headers` file is not a valid HSTS substitute.
-- **Wildcard `*.deluisa.bio` → redirect** (proxied / orange cloud, so the redirect rule fires and
-  Universal SSL covers it): `*.deluisa.bio` CNAME → `deluisa.bio`, plus one Cloudflare **Dynamic
-  Redirect** rule using a **Wildcard pattern** (the Free plan can't use `regex_replace`):
-  - **When** → custom expression: `(http.request.full_uri wildcard "https://*.deluisa.bio/*" and http.host ne "api.deluisa.bio")`
-  - **Then** → Dynamic → `https://deluisa.bio/${1}`, status **301**, preserve query string.
+### DNS & Cloudflare setup (for massimo.smartsquad.io / samuel.smartsquad.io + aliases)
 
-  `${1}` is the subdomain; **do not** append `${2}`/the path or a trailing `/` — vite-ssg emits flat
-  `dist/<slug>.html`, so GitHub Pages serves `/massimo` (200) but `/massimo/` 404s. The
-  `http.host ne "api.deluisa.bio"` guard stops the admin API host from being redirected (redirect
-  rules run before Worker routes). One rule covers every person.
-- **Admin API `api.deluisa.bio` → the Worker** — add it as a **Custom Domain** on the Worker
-  (Workers & Pages → `de-luisa-bio-admin` → Settings → Domains & Routes), which creates the proxied
-  DNS record + route. Same registrable domain as the site, so the session cookie is first-party.
+GitHub Pages hosts the static site (typically at `https://smartsquad.github.io/smartsquad-bio/` or a
+custom domain attached to the Pages project).
 
-## Adding a person
+Cloudflare handles the nice subdomains:
+
+- Create DNS records (orange/proxied where needed):
+  - `massimo.smartsquad.io`, `samuel.smartsquad.io`, `cto.smartsquad.io`, `ceo.smartsquad.io`
+  - `api.smartsquad.io` (for the admin Worker)
+
+Recommended approach (simple & reliable):
+- Point the subdomains via **CNAME** (or A/AAAA for apex-style) to the GitHub Pages target, or use
+  Cloudflare **Redirect Rules** / **Page Rules** / **Workers** to map:
+  - `https://massimo.smartsquad.io/*` → `https://<gh-pages-host>/massimo` (301 or proxy)
+  - `https://cto.smartsquad.io/*` → `https://<gh-pages-host>/massimo`
+  - Same for samuel / ceo.
+
+- For the admin API: add `api.smartsquad.io` as a **Custom Domain** on the Cloudflare Worker.
+  This keeps the Worker on the same registrable domain as the site for first-party cookies.
+
+- Update GitHub repo **Pages settings** → Custom domain if you attach a base domain (optional).
+- Generate the OG images etc at build time; they are served from the same static origin.
+
+See the original de-luisa-bio repository for additional HSTS / SSL notes if you proxy the site through Cloudflare.
+
+## Adding / updating a founder
 
 A member needs two things: an **admin login** and a **bio**. The home grid and routes include any
 `content/bios/*.json` automatically — no code changes.
@@ -138,25 +144,23 @@ Add that object to the `ADMIN_USERS` JSON array:
 - **Local**: in `worker/.dev.vars` (insert `,{…}` before the closing `]`), then restart `bun run dev`.
 - **Production**: update the GitHub **Secret `ADMIN_USERS`** with the full array (all users).
 
-Rules: the **slug** is the URL (`deluisa.bio/<slug>`) and subdomain — lowercase letters, digits and
+Rules: the **slug** is the URL path and the preferred subdomain (e.g. `massimo`, `samuel`) — lowercase letters, digits and
 hyphens only. Each user can edit **only** their own bio (enforced by the Worker).
 
 ### 2. Create the bio — two ways
 
 - **Via the admin (easiest):** the person signs in at `/admin`, fills everything (name, colours,
-  content, links) and **uploads an avatar**, then **Save bio**. This creates
-  `content/bios/<slug>.json` automatically (locally it writes to the working tree; in production it
-  commits to GitHub).
-- **Pre-seed (so they appear immediately):** copy an existing `content/bios/<slug>.json`, change
-  `slug` / `name` / `theme` colours, leave `avatar: ""` (a coloured letter-glyph shows until a photo
-  is uploaded). They then complete it from the admin.
+  content, links, socials) with live preview, then **Save bio**. This creates / updates
+  `content/bios/<slug>.json` (in production it commits to GitHub via the Worker).
+- **Pre-seed / manual:** edit `content/bios/<slug>.json` directly in the repo (or copy an existing one and tweak `slug` / `name` / `theme`). Leave `avatar: ""` to show a letter glyph until a photo is added.
 
-Avatars are uploaded as square WebP derivatives (`<slug>-{original,2000,600,250}.webp` under
-`public/media/`) and served responsively; the bio's `avatar` stores the base path `/media/<slug>`.
+Avatars (optional) are square WebP sets under `public/media/<slug>-*.webp`; the JSON stores the base `/media/<slug>`.
 
-Push — the site rebuilds; `deluisa.bio/<slug>` and `<slug>.deluisa.bio` both work.
+After push the site rebuilds on GitHub Pages. Cloudflare routes the subdomains.
 
 ## Tech
 
 Vue 3 (beta) · Vite 8 · vite-ssg · Tailwind CSS v4 · Pug + SCSS · i18next · @unhead/vue · VueUse ·
 satori + resvg (OG) · PostHog + GTM · Cloudflare Workers · TypeScript · Bun.
+
+Deployed to GitHub Pages under the Smart Squad GitHub organization. Subdomains managed with Cloudflare.
