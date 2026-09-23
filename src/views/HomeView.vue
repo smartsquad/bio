@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useHead, useSeoMeta } from '@unhead/vue'
-import { useFavicon } from '@vueuse/core'
 
 import type { IBio } from '@/content/bio'
 import { bios } from '@/composables/use-bios'
@@ -133,8 +132,6 @@ useHead({
   link: [{ rel: 'canonical', href: 'https://bio.smartsquad.io/' }],
   script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(jsonLd) }],
 })
-
-useFavicon('/favicon.ico')
 </script>
 
 <template lang="pug">

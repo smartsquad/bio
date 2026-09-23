@@ -1,7 +1,7 @@
 # smartsquad-bio
 
 **Link-in-bio** site for the Smart Squad founders (Massimo & Samuel) — one page per person, content in the repo as
-JSON, edited through a small custom admin, with per-person SEO and OpenGraph images. All profiles use the common Smart Squad favicon.
+JSON, edited through a small custom admin, with per-person SEO and OpenGraph images. Profiles share the Smart Squad favicon in `public/` (`favicon.svg` switches between the dark and green mark with the color scheme).
 
 Used for `massimo.smartsquad.io`, `samuel.smartsquad.io` (with aliases `cto.smartsquad.io` and `ceo.smartsquad.io`).
 
@@ -17,7 +17,7 @@ Vue 3 + Vite 8 + Tailwind v4 + Pug + SCSS + i18next, prerendered with **vite-ssg
   are handled via Cloudflare (redirect or proxy to the correct path on bio.smartsquad.io).
 - **Prerendering** — `vite-ssg` emits one static HTML per bio (`vite.config.ts` `includedRoutes`)
   so each `/<slug>` ships its own `<title>`/OG/`<meta>` (via `@unhead/vue`) for social scrapers.
-- **OG images** — generated post-build into `dist/og/<slug>.png` (`scripts/generate-og.ts`). All profiles share the common favicon from the main site.
+- **OG images** — generated post-build into `dist/og/<slug>.png` (`scripts/generate-og.ts`). Profiles share the Smart Squad favicon in `public/` (`favicon.svg` switches between the dark and green mark with the color scheme).
 - **Theme per bio** — `IBio.theme` (primary/secondary colours, font, card radius, avatar
   radius/border) is applied via CSS variables in `BioView.vue` and configurable in the admin.
 
