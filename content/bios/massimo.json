@@ -19,7 +19,7 @@
   },
   "content": {
     "en": {
-      "eyebrow": "CTO & Co-founder @ Smart Squad",
+      "eyebrow": "CTO & Co-founder @Smart Squad",
       "tagline": "Platforms, mobile apps and AI-assisted workflows that stay simple under pressure."
     },
     "it": {
@@ -83,7 +83,13 @@
   "socials": [
     {
       "id": "github",
-      "label": { "en": "GitHub", "it": "GitHub", "ja": "GitHub", "ru": "GitHub", "uk": "GitHub" },
+      "label": {
+        "en": "GitHub",
+        "it": "GitHub",
+        "ja": "GitHub",
+        "ru": "GitHub",
+        "uk": "GitHub"
+      },
       "href": "https://github.com/massimodeluisa",
       "icon": "mdi:github",
       "color": "#181717",
@@ -108,7 +114,13 @@
     },
     {
       "id": "x",
-      "label": { "en": "X", "it": "X", "ja": "X", "ru": "X", "uk": "X" },
+      "label": {
+        "en": "X",
+        "it": "X",
+        "ja": "X",
+        "ru": "X",
+        "uk": "X"
+      },
       "href": "https://x.com/massimodeluisa",
       "icon": "simple-icons:x",
       "color": "#000000",
