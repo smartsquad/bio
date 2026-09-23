@@ -1,21 +1,21 @@
 {
   "slug": "massimo",
   "name": "Massimo De Luisa",
-  "avatar": "",
+  "avatar": "/media/massimo",
   "site": "https://smartsquad.io",
   "siteCard": {
     "url": "https://smartsquad.io",
     "image": ""
   },
   "theme": {
-    "primary": "#3b82f6",
-    "secondary": "#1e40af",
-    "glyphColor": "#1e40af",
+    "primary": "#8894a9",
+    "secondary": "#b68370",
+    "glyphColor": "#b68370",
     "font": "geist-sans",
-    "cardRadius": 16,
+    "cardRadius": 14,
     "avatarRadius": 9999,
-    "avatarBorderWidth": 2,
-    "avatarBorderColor": "#1e40af"
+    "avatarBorderWidth": 1,
+    "avatarBorderColor": "#b68370"
   },
   "content": {
     "en": {
@@ -127,6 +127,26 @@
       "mono": true,
       "external": true,
       "iconSize": "1.5rem"
+    },
+    {
+      "id": "telegram",
+      "label": {
+        "en": "Telegram",
+        "it": "Telegram"
+      },
+      "href": "https://t.me/massimodeluisa",
+      "icon": "fa-brands:telegram",
+      "color": "#26a5e4"
+    },
+    {
+      "id": "line",
+      "label": {
+        "en": "Line",
+        "it": "Line"
+      },
+      "href": "https://line.me/ti/p/KrsSKLsYE9",
+      "icon": "fa-brands:line",
+      "color": "#06c755"
     }
   ]
 }
