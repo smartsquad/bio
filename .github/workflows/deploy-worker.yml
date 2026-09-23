@@ -30,7 +30,7 @@ jobs:
           ADMIN_USERS: ${{ secrets.ADMIN_USERS }}
         run: |
           CFG="--config worker/wrangler.toml"
-          bunx wrangler deploy --x-autoconfig=false $CFG
+          bunx wrangler deploy --autoconfig=false $CFG
           printf '%s' "$SESSION_SECRET"     | bunx wrangler secret put SESSION_SECRET   $CFG
           printf '%s' "$ADMIN_GITHUB_TOKEN" | bunx wrangler secret put GITHUB_TOKEN      $CFG
           if [ -n "$POSTHOG_READ_KEY" ]; then printf '%s' "$POSTHOG_READ_KEY" | bunx wrangler secret put POSTHOG_READ_KEY $CFG; fi
