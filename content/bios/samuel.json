@@ -92,7 +92,7 @@
         "uk": "LinkedIn"
       },
       "href": "https://www.linkedin.com/in/samuelburlon",
-      "icon": "mdi:linkedin",
+      "icon": "simple-icons:linkedin",
       "color": "#0A66C2",
       "external": true,
       "iconSize": "2rem",
@@ -108,7 +108,7 @@
         "uk": "X"
       },
       "href": "https://x.com/samuelburlon",
-      "icon": "mdi:twitter",
+      "icon": "simple-icons:x",
       "color": "#000000",
       "mono": true,
       "external": true,
