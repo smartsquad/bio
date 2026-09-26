@@ -83,23 +83,6 @@
   ],
   "socials": [
     {
-      "id": "github",
-      "label": {
-        "en": "GitHub",
-        "it": "GitHub",
-        "ja": "GitHub",
-        "ru": "GitHub",
-        "uk": "GitHub"
-      },
-      "href": "https://github.com/samuelburlon",
-      "icon": "mdi:github",
-      "color": "#181717",
-      "mono": true,
-      "external": true,
-      "iconSize": "2rem",
-      "quick": false
-    },
-    {
       "id": "linkedin",
       "label": {
         "en": "LinkedIn",
