@@ -4,6 +4,7 @@ import i18next from 'i18next'
 
 import type { IBio, IBioLink, TLocale } from '@/content/bio'
 import { track } from '@/composables/use-analytics'
+import { useSiteCardImage } from '@/composables/use-site-card-image'
 import { avatarSources } from '@/lib/avatar'
 import { letterGlyphDataUri } from '@/lib/letter-glyph'
 import { FONT_STACK } from '@/lib/load-font'
@@ -69,7 +70,7 @@ const cardStyle = { borderRadius: 'var(--bio-card-radius)' }
 
 const siteCardImgOk = ref(true)
 watch(
-  () => [props.bio.slug, props.bio.siteCard?.image],
+  () => [props.bio.slug, props.bio.siteCard?.image, props.bio.siteCard?.url],
   () => {
     siteCardImgOk.value = true
   },
@@ -77,6 +78,44 @@ watch(
 
 const siteCardDomain = computed(
   () => props.bio.siteCard?.url.replace(/^https?:\/\//, '') ?? '',
+)
+
+const { src: siteCardImageSrc } = useSiteCardImage(
+  () => props.bio.siteCard?.url,
+  () => props.bio.siteCard?.image,
+)
+
+const showSiteCard = computed(
+  () =>
+    Boolean(props.bio.siteCard?.url) && props.bio.siteCard?.enabled !== false,
+)
+
+const siteCardPosition = computed(
+  () => props.bio.siteCard?.position ?? 'before',
+)
+
+type TLinkBlock = 'site' | 'links' | 'socials'
+const linkBlocks = computed((): TLinkBlock[] => {
+  const blocks: TLinkBlock[] = ['links', 'socials']
+  if (!showSiteCard.value) {
+    return blocks
+  }
+  if (siteCardPosition.value === 'after') {
+    return [...blocks, 'site']
+  }
+  return ['site', ...blocks]
+})
+
+const isSplitLayout = computed(() => (props.bio.layout?.columns ?? 2) === 2)
+
+const mainGridClass = computed(() =>
+  isSplitLayout.value
+    ? 'lg:w-auto lg:max-w-none lg:grid lg:grid-cols-[23rem_26rem] lg:items-center lg:gap-12'
+    : '',
+)
+
+const quickSocials = computed(() =>
+  props.bio.socials.filter((s) => s.quick !== false),
 )
 
 const siteCardLabel = computed(() => i18next.t('social.siteCard', { lng: props.locale }))
@@ -117,7 +156,7 @@ const onClick = (link: { id: string; href: string }) => {
   .bio-profile__glow.pointer-events-none.absolute.inset-0.-z-10(aria-hidden="true")
 
   .w-full.max-w-sm.flex-1.flex.flex-col.items-center.justify-center.gap-6.py-8(
-    class="lg:w-auto lg:max-w-none lg:grid lg:grid-cols-[23rem_26rem] lg:items-center lg:gap-12"
+    :class="mainGridClass"
   )
     .flex.flex-col.items-center.gap-6.text-center(class="lg:gap-7")
       .social-rise.flex.flex-col.items-center.gap-2
@@ -155,12 +194,12 @@ const onClick = (link: { id: string; href: string }) => {
           p.font-mono.font-semibold.uppercase.text-site-secondary(class="text-[11px] tracking-[0.22em]") {{ content.eyebrow }}
         p.text-sm.leading-relaxed.text-pretty.text-site-muted(class="max-w-[19rem]") {{ content.tagline }}
 
-      nav(aria-label="Social profiles")
+      nav(v-if="quickSocials.length" aria-label="Social profiles")
         h2.sr-only Social profiles
         ul.social-rise.m-0.flex.list-none.flex-wrap.items-center.justify-center.gap-2.p-0(
           class="[animation-delay:0.08s]"
         )
-          li(v-for="s in bio.socials" :key="s.id")
+          li(v-for="s in quickSocials" :key="s.id")
             a.flex.size-11.items-center.justify-center.rounded-full.bg-white.shadow-sm.ring-1.transition-all(
               :href="interactive ? s.href : undefined"
               :target="s.external && interactive ? '_blank' : undefined"
@@ -180,79 +219,82 @@ const onClick = (link: { id: string; href: string }) => {
       class="[animation-delay:0.16s]"
     )
       h2.sr-only Links and contact details
-      a.group.block.w-full.overflow-hidden.border.border-site-border.no-underline.transition-all(
-        v-if="bio.siteCard && bio.siteCard.url"
-        :href="interactive ? bio.siteCard.url : undefined"
-        :style="cardStyle"
-        :target="interactive ? '_blank' : undefined"
-        rel="noopener noreferrer"
-        class="bg-site-surface/70"
-        :class="interactiveClass(CARD_HOVER)"
-        @click="onClick({ id: 'website_card', href: bio.siteCard.url })"
-      )
-        img.block.w-full.object-cover(
-          v-if="siteCardImgOk && bio.siteCard.image"
-          :src="bio.siteCard.image"
-          :alt="siteCardDomain + ' preview'"
-          width="1200"
-          height="540"
-          loading="lazy"
-          decoding="async"
-          class="aspect-[1200/540]"
-          @error="siteCardImgOk = false"
+      template(v-for="block in linkBlocks" :key="block")
+        a.group.block.w-full.overflow-hidden.border.border-site-border.no-underline.transition-all(
+          v-if="block === 'site' && bio.siteCard"
+          :href="interactive ? bio.siteCard.url : undefined"
+          :style="cardStyle"
+          :target="interactive ? '_blank' : undefined"
+          rel="noopener noreferrer"
+          class="bg-site-surface/70"
+          :class="interactiveClass(CARD_HOVER)"
+          @click="onClick({ id: 'website_card', href: bio.siteCard.url })"
         )
-        .flex.items-center.justify-between.gap-3.px-4.py-3
-          span.flex.flex-col
-            span.text-sm.font-semibold.text-site-heading {{ siteCardDomain }}
-            span.text-xs.text-site-muted {{ siteCardLabel }}
-          span.text-base.opacity-40.transition-transform(
-            aria-hidden="true"
-            :class="{ 'group-hover:translate-x-0.5': interactive }"
-          ) →
+          img.block.w-full.object-cover(
+            v-if="siteCardImgOk && siteCardImageSrc"
+            :src="siteCardImageSrc"
+            :alt="siteCardDomain + ' preview'"
+            width="1200"
+            height="540"
+            loading="lazy"
+            decoding="async"
+            class="aspect-[1200/540]"
+            @error="siteCardImgOk = false"
+          )
+          .flex.items-center.justify-between.gap-3.px-4.py-3
+            span.flex.flex-col
+              span.text-sm.font-semibold.text-site-heading {{ siteCardDomain }}
+              span.text-xs.text-site-muted {{ siteCardLabel }}
+            span.text-base.opacity-40.transition-transform(
+              aria-hidden="true"
+              :class="{ 'group-hover:translate-x-0.5': interactive }"
+            ) →
 
-      a.group.flex.h-14.w-full.items-center.gap-3.border.px-4.no-underline.transition-all(
-        v-for="link in bio.links"
-        :key="link.id"
-        :href="interactive ? link.href : undefined"
-        :style="cardStyle"
-        :target="link.external && interactive ? '_blank' : undefined"
-        :rel="link.external ? 'noopener noreferrer' : undefined"
-        :download="link.download ? '' : undefined"
-        :class="linkClass(link)"
-        @click="onClick(link)"
-      )
-        span.size-5.shrink-0.bg-current.social-icon(
-          v-if="link.icon"
-          :style="{ maskImage: `url(${iconUrl(link.icon)})`, WebkitMaskImage: `url(${iconUrl(link.icon)})` }"
-          aria-hidden="true"
-        )
-        span.flex-1.text-center.text-sm.font-medium {{ label(link) }}
-        span.text-base.opacity-40.transition-transform(
-          aria-hidden="true"
-          :class="{ 'group-hover:translate-x-0.5': interactive }"
-        ) →
+        template(v-else-if="block === 'links'")
+          a.group.flex.h-14.w-full.items-center.gap-3.border.px-4.no-underline.transition-all(
+            v-for="link in bio.links"
+            :key="link.id"
+            :href="interactive ? link.href : undefined"
+            :style="cardStyle"
+            :target="link.external && interactive ? '_blank' : undefined"
+            :rel="link.external ? 'noopener noreferrer' : undefined"
+            :download="link.download ? '' : undefined"
+            :class="linkClass(link)"
+            @click="onClick(link)"
+          )
+            span.size-5.shrink-0.bg-current.social-icon(
+              v-if="link.icon"
+              :style="{ maskImage: `url(${iconUrl(link.icon)})`, WebkitMaskImage: `url(${iconUrl(link.icon)})` }"
+              aria-hidden="true"
+            )
+            span.flex-1.text-center.text-sm.font-medium {{ label(link) }}
+            span.text-base.opacity-40.transition-transform(
+              aria-hidden="true"
+              :class="{ 'group-hover:translate-x-0.5': interactive }"
+            ) →
 
-      a.group.flex.h-14.w-full.items-center.gap-3.border.border-site-border.px-4.text-site-heading.no-underline.transition-all(
-        v-for="s in bio.socials"
-        :key="`btn-${s.id}`"
-        :href="interactive ? s.href : undefined"
-        :style="cardStyle"
-        :target="interactive ? '_blank' : undefined"
-        rel="me noopener noreferrer"
-        class="bg-site-surface/70"
-        :class="interactiveClass(CARD_HOVER)"
-        @click="onClick(s)"
-      )
-        span.size-5.shrink-0.social-icon(
-          :class="s.mono ? 'bg-current' : ''"
-          :style="{ maskImage: `url(${iconUrl(s.icon)})`, WebkitMaskImage: `url(${iconUrl(s.icon)})`, backgroundColor: s.mono ? undefined : s.color }"
-          aria-hidden="true"
-        )
-        span.flex-1.text-center.text-sm.font-medium {{ label(s) }}
-        span.text-base.opacity-40.transition-transform(
-          aria-hidden="true"
-          :class="{ 'group-hover:translate-x-0.5': interactive }"
-        ) →
+        template(v-else-if="block === 'socials'")
+          a.group.flex.h-14.w-full.items-center.gap-3.border.border-site-border.px-4.text-site-heading.no-underline.transition-all(
+            v-for="s in bio.socials"
+            :key="`btn-${s.id}`"
+            :href="interactive ? s.href : undefined"
+            :style="cardStyle"
+            :target="interactive ? '_blank' : undefined"
+            rel="me noopener noreferrer"
+            class="bg-site-surface/70"
+            :class="interactiveClass(CARD_HOVER)"
+            @click="onClick(s)"
+          )
+            span.size-5.shrink-0.social-icon(
+              :class="s.mono ? 'bg-current' : ''"
+              :style="{ maskImage: `url(${iconUrl(s.icon)})`, WebkitMaskImage: `url(${iconUrl(s.icon)})`, backgroundColor: s.mono ? undefined : s.color }"
+              aria-hidden="true"
+            )
+            span.flex-1.text-center.text-sm.font-medium {{ label(s) }}
+            span.text-base.opacity-40.transition-transform(
+              aria-hidden="true"
+              :class="{ 'group-hover:translate-x-0.5': interactive }"
+            ) →
 
   footer.social-rise.pt-6.pb-8.font-mono.text-site-muted(
     class="text-[10px] tracking-[0.2em] [animation-delay:0.28s]"

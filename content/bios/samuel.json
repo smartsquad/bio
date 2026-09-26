@@ -5,7 +5,12 @@
   "site": "https://smartsquad.io",
   "siteCard": {
     "url": "https://smartsquad.io",
-    "image": ""
+    "image": "https://smartsquad.io/api/media/file/hero%20preview%20smart%20squad-en.jpg",
+    "enabled": true,
+    "position": "after"
+  },
+  "layout": {
+    "columns": 1
   },
   "theme": {
     "primary": "#10b981",
@@ -91,7 +96,8 @@
       "color": "#181717",
       "mono": true,
       "external": true,
-      "iconSize": "2rem"
+      "iconSize": "2rem",
+      "quick": false
     },
     {
       "id": "linkedin",
@@ -106,7 +112,8 @@
       "icon": "mdi:linkedin",
       "color": "#0A66C2",
       "external": true,
-      "iconSize": "2rem"
+      "iconSize": "2rem",
+      "quick": false
     },
     {
       "id": "x",
@@ -122,7 +129,8 @@
       "color": "#000000",
       "mono": true,
       "external": true,
-      "iconSize": "1.5rem"
+      "iconSize": "1.5rem",
+      "quick": false
     }
   ]
 }

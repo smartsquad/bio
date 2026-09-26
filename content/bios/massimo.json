@@ -5,7 +5,12 @@
   "site": "https://smartsquad.io",
   "siteCard": {
     "url": "https://smartsquad.io",
-    "image": ""
+    "image": "https://smartsquad.io/api/media/file/hero%20preview%20smart%20squad-en.jpg",
+    "enabled": true,
+    "position": "before"
+  },
+  "layout": {
+    "columns": 2
   },
   "theme": {
     "primary": "#8894a9",
@@ -95,7 +100,8 @@
       "color": "#181717",
       "mono": true,
       "external": true,
-      "iconSize": "2rem"
+      "iconSize": "2rem",
+      "quick": true
     },
     {
       "id": "linkedin",
@@ -110,7 +116,8 @@
       "icon": "mdi:linkedin",
       "color": "#0A66C2",
       "external": true,
-      "iconSize": "2rem"
+      "iconSize": "2rem",
+      "quick": true
     },
     {
       "id": "x",
@@ -126,7 +133,8 @@
       "color": "#000000",
       "mono": true,
       "external": true,
-      "iconSize": "1.5rem"
+      "iconSize": "1.5rem",
+      "quick": true
     },
     {
       "id": "telegram",
@@ -136,7 +144,8 @@
       },
       "href": "https://t.me/massimodeluisa",
       "icon": "fa-brands:telegram",
-      "color": "#26a5e4"
+      "color": "#26a5e4",
+      "quick": true
     },
     {
       "id": "line",
@@ -146,7 +155,8 @@
       },
       "href": "https://line.me/ti/p/KrsSKLsYE9",
       "icon": "fa-brands:line",
-      "color": "#06c755"
+      "color": "#06c755",
+      "quick": true
     }
   ]
 }
