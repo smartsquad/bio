@@ -11,7 +11,7 @@
     "primary": "#10b981",
     "secondary": "#047857",
     "glyphColor": "#047857",
-    "font": "geist-sans",
+    "font": "space-grotesk",
     "cardRadius": 16,
     "avatarRadius": 9999,
     "avatarBorderWidth": 5,
@@ -19,12 +19,12 @@
   },
   "content": {
     "en": {
-      "eyebrow": "CEO & Co-founder @ Smart Squad",
-      "tagline": "Turning complex problems into elegant software. Building products and teams that deliver."
+      "eyebrow": "CEO & Founder: Smart Squad and Inksquad",
+      "tagline": ""
     },
     "it": {
-      "eyebrow": "CEO & Co-founder @ Smart Squad",
-      "tagline": "Trasformo problemi complessi in software elegante. Creo prodotti e team che consegnano."
+      "eyebrow": "CEO & Founder: Smart Squad and Inksquad",
+      "tagline": ""
     },
     "ja": {
       "eyebrow": "CEO・共同創業者 @ Smart Squad",
@@ -54,10 +54,10 @@
       "primary": true
     },
     {
-      "id": "website",
+      "id": "smart",
       "label": {
-        "en": "Smart Squad",
-        "it": "Smart Squad",
+        "en": "Smart Squad: Software",
+        "it": "Smart Squad: Software",
         "ja": "Smart Squad",
         "ru": "Smart Squad",
         "uk": "Smart Squad"
@@ -65,6 +65,15 @@
       "href": "https://smartsquad.io",
       "icon": "mdi:web",
       "external": true
+    },
+    {
+      "id": "ink",
+      "label": {
+        "en": "Inksquad: Tattoos",
+        "it": "Inksquad: Tattoos"
+      },
+      "href": "https://inksquad.com",
+      "icon": "mdi:web"
     }
   ],
   "socials": [
