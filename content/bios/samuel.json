@@ -108,7 +108,7 @@
         "uk": "X"
       },
       "href": "https://x.com/samuelburlon",
-      "icon": "simple-icons:x",
+      "icon": "mdi:twitter",
       "color": "#000000",
       "mono": true,
       "external": true,
