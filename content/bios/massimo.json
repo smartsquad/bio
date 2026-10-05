@@ -157,6 +157,17 @@
       "icon": "fa-brands:line",
       "color": "#06c755",
       "quick": true
+    },
+    {
+      "id": "whatsapp",
+      "label": {
+        "en": "WhatsApp",
+        "it": "WhatsApp"
+      },
+      "href": "https://wa.me/16286290656",
+      "icon": "mdi:whatsapp",
+      "quick": true,
+      "color": "#25d366"
     }
   ]
 }
