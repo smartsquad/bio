@@ -168,6 +168,17 @@
       "icon": "mdi:whatsapp",
       "quick": true,
       "color": "#25d366"
+    },
+    {
+      "id": "discord",
+      "label": {
+        "en": "Discord",
+        "it": "Discord"
+      },
+      "href": "https://discord.com/users/566241728542146590",
+      "icon": "mdi:discord",
+      "quick": true,
+      "color": "#5865f2"
     }
   ]
 }
