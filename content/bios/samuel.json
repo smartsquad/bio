@@ -114,6 +114,17 @@
       "external": true,
       "iconSize": "1.5rem",
       "quick": false
+    },
+    {
+      "id": "",
+      "label": {
+        "en": "Book a call",
+        "it": "Prenota una call"
+      },
+      "href": "https://cal.com/samuelburlon/samuel-burlon-main",
+      "icon": "",
+      "quick": true,
+      "color": "#181717"
     }
   ]
 }
